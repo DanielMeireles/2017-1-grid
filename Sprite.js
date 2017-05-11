@@ -54,7 +54,6 @@ Sprite.prototype.moverOnMap = function(map, dt) {
   } else {
     this.y = this.y + this.vy * dt;
   }
-
 };
 
 

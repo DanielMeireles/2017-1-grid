@@ -2,6 +2,7 @@ function Map(l, c) {
   this.SIZE = 40;
   this.cells = [];
   this.enemies = [];
+  this.tiros = [];
 
   for (var i = 0; i < l; i++) {
     this.cells[i] = [];
@@ -32,6 +33,7 @@ Map.prototype.desenhar = function(ctx) {
     }
   }
   this.desenharInimigos(ctx);
+  this.desenharTiros(ctx);
 };
 
 Map.prototype.loadMap = function(map) {
@@ -92,3 +94,76 @@ Map.prototype.persegue = function(alvo) {
     this.enemies[i].persegue(alvo);
   }
 }
+
+Map.prototype.tiro = function (x, y, dir) {
+    var tiro = new Sprite();
+    tiro.x = x;
+    tiro.y = y;
+    switch (dir) {
+      case 1:
+        tiro.vx = -200;
+        tiro.vy = 0;
+      break;
+      case 2:
+        tiro.vy = -200;
+        tiro.vx = 0;
+      break;
+      case 3:
+        tiro.vx = +200;
+        tiro.vy = 0;
+      break;
+      case 4:
+        tiro.vy = +200;
+        tiro.vx = 0;
+      break;
+    }
+    this.tiros.push(tiro);
+}
+
+Map.prototype.desenharTiros = function(ctx) {
+  for (var i = 0; i < this.tiros.length; i++) {
+    this.tiros[i].desenhar(ctx);
+    this.tiros[i].destroyed = false;
+  }
+}
+
+Map.prototype.moverTirosOnMap = function(map, dt) {
+  for (var i = 0; i < this.tiros.length; i++) {
+    this.tiros[i].moverOnMap(map,dt);
+  }
+}
+
+Map.prototype.moverTiros = function(map, dt) {
+  for (var i = 0; i < this.tiros.length; i++) {
+    this.tiros[i].mover(dt);
+  }
+}
+
+this.testarColisaoTiros = function(){
+  for (var i = 0; i < this.enemies.length; i++) {
+    for (var j = this.tiros.length-1; j>=0; j--) {
+      if(this.tiros[j].colidiuCom(this.enemies[i])){
+        this.enemies[i].color = "green";
+        this.enemies[i].x = 300-600*Math.random();
+        this.enemies[i].y = 100-200*Math.random();
+        this.tiros[j].x = -2000;
+        this.tiros[j].y = -2000;
+        this.tiros.splice(j,1);
+      } else {
+        this.enemies[i].color = "red";
+      }
+    }
+  }
+  for (var j =  this.tiros.length-1;j>=0; j--) {
+    if(
+      this.tiros[j].x > 1000 || this.tiros[j].x < -1000 ||
+      this.tiros[j].y > 1000 || this.tiros[j].y < -1000)
+      {
+        this.tiros.splice(j,1);
+      }
+  }
+}
+
+
+
+//Splice apaga o tiro

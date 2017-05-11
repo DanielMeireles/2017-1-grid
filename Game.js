@@ -27,6 +27,7 @@ function init(){
   pc = new Sprite();
   pc.x = 50;
   pc.y = 50;
+  pc.dir = 1;
   configuraControles();
 
   requestAnimationFrame(passo);
@@ -39,6 +40,8 @@ function passo(t){
   mapa.persegue(pc);
   pc.moverOnMap(mapa, dt);
   mapa.moverInimigosOnMap(mapa, dt);
+  mapa.moverTirosOnMap(mapa, dt);
+  //mapa.moverTiros(mapa, dt);
   mapa.desenhar(ctx);
   pc.desenhar(ctx);
   antes = t;
@@ -49,19 +52,26 @@ function configuraControles(){
     switch (e.keyCode) {
       case 37:
           pc.vx = -100;
+          pc.dir = 1;
           e.preventDefault();
         break;
       case 38:
           pc.vy = -100;
+          pc.dir = 2;
           e.preventDefault();
         break;
       case 39:
           pc.vx = +100;
+          pc.dir = 3;
           e.preventDefault();
         break;
       case 40:
           pc.vy = +100;
+          pc.dir = 4;
           e.preventDefault();
+        break;
+        case 32:
+          mapa.tiro(pc.x, pc.y, pc.dir);
         break;
       default:
     }
