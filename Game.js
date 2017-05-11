@@ -38,13 +38,10 @@ function passo(t){
   ctx.clearRect(0,0, tela.width, tela.height);
   requestAnimationFrame(passo);
   mapa.persegue(pc);
-
   mapa.testarColisao(pc);
   mapa.testarColisaoTiros(mapa);
-
   pc.moverOnMap(mapa, dt);
   mapa.moverInimigosOnMap(mapa, dt);
-  //mapa.moverTirosOnMap(mapa, dt);
   mapa.moverTiros(mapa, dt);
   mapa.desenhar(ctx);
   pc.desenhar(ctx);

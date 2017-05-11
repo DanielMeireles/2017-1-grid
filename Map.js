@@ -153,12 +153,27 @@ Map.prototype.testarColisaoTiros = function(map){
       if(this.tiros[j].colidiuCom(this.enemies[i])){
         this.tiros[j].destroyed = true;
         this.enemies[i].destroyed = true;
+        this.delete();
       }
     }
   }
   for (var j = this.tiros.length-1; j>=0; j--) {
     if (map.cells[Math.floor(this.tiros[j].y/40)][Math.floor(this.tiros[j].x/40)] == 1){
       this.tiros[j].destroyed = true;
+      this.delete();
+    }
+  }
+}
+
+Map.prototype.delete = function(){
+  for (var j = this.tiros.length-1; j>=0; j--) {
+    if (this.tiros[j].destroyed == true){
+      this.tiros.splice(j,1);
+    }
+  }
+  for (var i = this.enemies.length-1; i>=0; i--) {
+    if (this.enemies[i].destroyed == true){
+      this.enemies.splice(i,1);
     }
   }
 }
