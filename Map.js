@@ -139,31 +139,26 @@ Map.prototype.moverTiros = function(map, dt) {
   }
 }
 
-this.testarColisaoTiros = function(){
+Map.prototype.testarColisao = function(alvo){
   for (var i = 0; i < this.enemies.length; i++) {
-    for (var j = this.tiros.length-1; j>=0; j--) {
-      if(this.tiros[j].colidiuCom(this.enemies[i])){
-        this.enemies[i].color = "green";
-        this.enemies[i].x = 300-600*Math.random();
-        this.enemies[i].y = 100-200*Math.random();
-        this.tiros[j].x = -2000;
-        this.tiros[j].y = -2000;
-        this.tiros.splice(j,1);
-      } else {
-        this.enemies[i].color = "red";
-      }
+    if(alvo.colidiuCom(this.enemies[i])){
+      this.enemies[i].destroyed = true;
     }
-  }
-  for (var j =  this.tiros.length-1;j>=0; j--) {
-    if(
-      this.tiros[j].x > 1000 || this.tiros[j].x < -1000 ||
-      this.tiros[j].y > 1000 || this.tiros[j].y < -1000)
-      {
-        this.tiros.splice(j,1);
-      }
   }
 }
 
-
-
-//Splice apaga o tiro
+Map.prototype.testarColisaoTiros = function(map){
+  for (var i = 0; i < this.enemies.length; i++) {
+    for (var j = this.tiros.length-1; j>=0; j--) {
+      if(this.tiros[j].colidiuCom(this.enemies[i])){
+        this.tiros[j].destroyed = true;
+        this.enemies[i].destroyed = true;
+      }
+    }
+  }
+  for (var j = this.tiros.length-1; j>=0; j--) {
+    if (map.cells[Math.floor(this.tiros[j].y/40)][Math.floor(this.tiros[j].x/40)] == 1){
+      this.tiros[j].destroyed = true;
+    }
+  }
+}
