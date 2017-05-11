@@ -58,15 +58,15 @@ Sprite.prototype.moverOnMap = function(map, dt) {
 
 
 Sprite.prototype.persegue = function(alvo) {
-  var dist = Math.sqrt(Math.pow(alvo.x - this.x, 2) + Math.pow(alvo.y - this.y, 2));
+var dist = Math.sqrt(Math.pow(alvo.x - this.x, 2) + Math.pow(alvo.y - this.y, 2));
 this.vx = 40 * (alvo.x - this.x) / dist;
 this.vy = 40 * (alvo.y - this.y) / dist;
 };
 
 Sprite.prototype.colidiuCom = function(alvo){
-  if(this.y+(this.SIZE/2) < alvo.y) return false;
-  if(this.y > alvo.y+(this.SIZE/2)) return false;
-  if(this.x+(this.SIZE/2) < alvo.x) return false;
-  if(this.x > alvo.x+(this.SIZE/2)) return false;
+  if(this.y+(this.SIZE/2) < alvo.y-(alvo.SIZE/2)) return false;
+  if(this.y-(this.SIZE/2) > alvo.y+(alvo.SIZE/2)) return false;
+  if(this.x+(this.SIZE/2) < alvo.x-(alvo.SIZE/2)) return false;
+  if(this.x-(this.SIZE/2) > alvo.x+(alvo.SIZE/2)) return false;
   return true;
 }

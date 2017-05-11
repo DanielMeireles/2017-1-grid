@@ -99,6 +99,7 @@ Map.prototype.tiro = function (x, y, dir) {
     var tiro = new Sprite();
     tiro.x = x;
     tiro.y = y;
+    tiro.SIZE=5;
     switch (dir) {
       case 1:
         tiro.vx = -200;
@@ -143,6 +144,7 @@ Map.prototype.testarColisao = function(alvo){
   for (var i = 0; i < this.enemies.length; i++) {
     if(alvo.colidiuCom(this.enemies[i])){
       this.enemies[i].destroyed = true;
+      this.delete();
     }
   }
 }
