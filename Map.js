@@ -26,6 +26,13 @@ Map.prototype.desenhar = function(ctx) {
           ctx.lineWidth = 3;
           ctx.strokeRect(j * this.SIZE, i * this.SIZE, this.SIZE, this.SIZE);
           break;
+        case 2:
+          ctx.fillStyle = 'gold';
+          ctx.strokeStyle = 'chocolate';
+          ctx.fillRect(j * this.SIZE, i * this.SIZE, this.SIZE, this.SIZE);
+          ctx.lineWidth = 3;
+          ctx.strokeRect(j * this.SIZE, i * this.SIZE, this.SIZE, this.SIZE);
+          break;
         default:
           ctx.fillStyle = 'red';
           ctx.fillRect(j * this.SIZE, i * this.SIZE, this.SIZE, this.SIZE);
@@ -42,6 +49,7 @@ Map.prototype.loadMap = function(map) {
       switch (map[i][j]) {
         case 0:
         case 1:
+        case 2:
           this.cells[i][j] = map[i][j];
           break;
         case 9:
@@ -177,5 +185,64 @@ Map.prototype.delete = function(){
     if (this.enemies[i].destroyed == true){
       this.enemies.splice(i,1);
     }
+  }
+}
+
+Map.prototype.alteraLevel = function(map){
+  if (map.cells[Math.floor(pc.y/40)][Math.floor(pc.x/40)] == 2){
+    level = level + 1;
+    if (level == 1){
+      casasMapa=([
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,0,9,1,0,0,0,0,9,1],
+        [1,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+        [1,0,0,9,1,0,0,0,0,0,9,0,0,0,1],
+        [1,0,0,0,0,0,0,0,1,0,1,0,0,0,1],
+        [1,0,0,0,0,0,1,1,1,0,1,1,0,0,1],
+        [1,0,0,0,0,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,9,0,0,0,0,0,9,0,1],
+        [1,1,1,1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,1,1,1,1,0,0,0,1,0,1],
+        [1,0,9,0,0,0,0,0,0,0,0,9,1,2,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      ])
+    } else if (level == 2){
+      casasMapa=([
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,0,9,1,0,0,0,0,9,1],
+        [1,0,0,0,1,0,1,0,1,0,0,0,0,0,1],
+        [1,0,0,9,1,0,1,0,0,0,9,0,0,0,1],
+        [1,0,0,0,1,0,1,0,1,0,1,0,0,0,1],
+        [1,0,0,0,0,0,1,1,1,0,1,1,0,0,1],
+        [1,1,0,1,1,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,9,0,0,0,1,0,9,0,1],
+        [1,1,1,1,0,0,0,0,0,0,1,0,0,0,1],
+        [1,0,0,0,0,1,1,1,1,0,1,0,1,0,1],
+        [1,0,9,0,0,0,0,0,0,0,0,9,1,2,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      ])
+    } else if (level == 3){
+      casasMapa=([
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,0,9,1,0,0,0,0,9,1],
+        [1,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+        [1,0,0,9,1,0,0,0,0,0,9,0,0,0,1],
+        [1,0,0,0,0,0,0,0,1,0,1,0,0,0,1],
+        [1,0,0,0,0,0,0,1,1,0,1,1,0,0,1],
+        [1,0,0,0,0,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,9,0,0,0,0,0,9,0,1],
+        [1,1,1,1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,1,1,1,1,0,0,0,1,1,1],
+        [1,0,9,0,0,0,0,0,0,0,0,9,1,1,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      ])
+    }
+    for (var i = 0; i < this.enemies.length; i++) {
+      this.enemies[i].destroyed = true;
+      this.delete();
+    }
+    pc.x = 50;
+    pc.y = 50;
+    mapa.loadMap(casasMapa);
   }
 }
