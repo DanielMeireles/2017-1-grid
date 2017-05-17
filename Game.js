@@ -60,7 +60,9 @@ function configuraControles(){
           e.preventDefault();
         break;
       case 38:
-          pc.vy = -100;
+          if(pc.vy === 0){
+            pc.vy -=200;
+          }
           pc.dir = 2;
           e.preventDefault();
         break;
@@ -70,7 +72,6 @@ function configuraControles(){
           e.preventDefault();
         break;
       case 40:
-          pc.vy = +100;
           pc.dir = 4;
           e.preventDefault();
         break;
@@ -85,11 +86,6 @@ function configuraControles(){
       case 37:
       case 39:
           pc.vx = 0;
-          e.preventDefault();
-        break;
-      case 38:
-      case 40:
-          pc.vy = 0;
           e.preventDefault();
         break;
       default:

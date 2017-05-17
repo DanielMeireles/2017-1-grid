@@ -29,7 +29,8 @@ Sprite.prototype.mover = function(dt) {
 
 Sprite.prototype.moverOnMap = function(map, dt) {
   var pos = map.getIndices(this);
-  if (map.cells[pos.l][pos.c] != 0) return;
+  this.vy += 220*dt;
+  //if (map.cells[pos.l][pos.c] != 0) return;
 
   if (this.vx > 0 && map.cells[pos.l][pos.c + 1] == 1) {
     var dist = (pos.c + 1) * map.SIZE - (this.x + this.SIZE / 2);
@@ -47,9 +48,11 @@ Sprite.prototype.moverOnMap = function(map, dt) {
     var dist = (pos.l + 1) * map.SIZE - (this.y + this.SIZE / 2);
     var mmax = Math.min(dist, this.vy * dt);
     this.y = this.y + mmax;
+    if(mmax==0) this.vy = 0;
   } else if (this.vy < 0 && map.cells[pos.l - 1][pos.c] == 1) {
     var dist = (pos.l) * map.SIZE - (this.y - this.SIZE / 2);
     var mmax = Math.max(dist, this.vy * dt);
+    if(mmax==0) this.vy = 220*dt;
     this.y = this.y + mmax;
   } else {
     this.y = this.y + this.vy * dt;
@@ -60,13 +63,20 @@ Sprite.prototype.moverOnMap = function(map, dt) {
 Sprite.prototype.persegue = function(alvo) {
 var dist = Math.sqrt(Math.pow(alvo.x - this.x, 2) + Math.pow(alvo.y - this.y, 2));
 this.vx = 40 * (alvo.x - this.x) / dist;
-this.vy = 40 * (alvo.y - this.y) / dist;
+if((alvo.y < this.y) && dist < 150 && this.vy == 0){
+  this.vy -= 200;
+}
+//this.vy = 40 * (alvo.y - this.y) / (2*dist);
 };
 
 Sprite.prototype.colidiuCom = function(alvo){
+  try{
   if(this.y+(this.SIZE/2) < alvo.y-(alvo.SIZE/2)) return false;
   if(this.y-(this.SIZE/2) > alvo.y+(alvo.SIZE/2)) return false;
   if(this.x+(this.SIZE/2) < alvo.x-(alvo.SIZE/2)) return false;
   if(this.x-(this.SIZE/2) > alvo.x+(alvo.SIZE/2)) return false;
+  }catch(e){
+    console.log(this,alvo)
+  }
   return true;
 }

@@ -152,14 +152,13 @@ Map.prototype.testarColisao = function(alvo){
   for (var i = 0; i < this.enemies.length; i++) {
     if(alvo.colidiuCom(this.enemies[i])){
       this.enemies[i].destroyed = true;
-      break;
+      this.delete();
     }
   }
-  this.delete();
 }
 
 Map.prototype.testarColisaoTiros = function(map){
-  for (var i = 0; i < this.enemies.length; i++) {
+  for (var i = this.enemies.length-1; i>=0; i--) {
     for (var j = this.tiros.length-1; j>=0; j--) {
       if(this.tiros[j].colidiuCom(this.enemies[i])){
         this.tiros[j].destroyed = true;
@@ -167,27 +166,25 @@ Map.prototype.testarColisaoTiros = function(map){
         break;
       }
     }
-  }
+  }       
+  this.delete();
   for (var j = this.tiros.length-1; j>=0; j--) {
     if (map.cells[Math.floor(this.tiros[j].y/40)][Math.floor(this.tiros[j].x/40)] == 1){
       this.tiros[j].destroyed = true;
-      break;
+      this.delete();
     }
   }
-  this.delete();
 }
 
 Map.prototype.delete = function(){
   for (var j = this.tiros.length-1; j>=0; j--) {
     if (this.tiros[j].destroyed == true){
       this.tiros.splice(j,1);
-      break;
     }
   }
   for (var i = this.enemies.length-1; i>=0; i--) {
     if (this.enemies[i].destroyed == true){
       this.enemies.splice(i,1);
-      break;
     }
   }
 }
@@ -195,7 +192,22 @@ Map.prototype.delete = function(){
 Map.prototype.alteraLevel = function(map){
   if (map.cells[Math.floor(pc.y/40)][Math.floor(pc.x/40)] == 2){
     level = level + 1;
-    if (level == 2){
+    if (level == 1){
+      casasMapa=([
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,0,9,1,0,0,0,0,9,1],
+        [1,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
+        [1,0,0,9,1,0,0,0,0,0,9,0,0,0,1],
+        [1,0,0,0,0,0,0,0,1,0,1,0,0,0,1],
+        [1,0,0,0,0,0,1,1,1,0,1,1,0,0,1],
+        [1,0,0,0,0,1,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,9,0,0,0,0,0,9,0,1],
+        [1,1,1,1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,1,1,1,1,0,0,0,1,0,1],
+        [1,0,9,0,0,0,0,0,0,0,0,9,1,2,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      ])
+    } else if (level == 2){
       casasMapa=([
         [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
         [1,0,0,0,1,0,0,9,1,0,0,0,0,9,1],
