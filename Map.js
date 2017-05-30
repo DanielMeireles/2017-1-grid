@@ -13,9 +13,17 @@ function Map(l, c) {
   }
 }
 Map.prototype.desenhar = function(ctx){
-  this.desenharLimites(ctx);
-  this.desenharTiles(ctx);
-  this.desenharTiros(ctx);
+  if (tempoRestante > 0){
+    this.desenharLimites(ctx);
+    this.desenharTiles(ctx);
+    this.desenharTiros(ctx);
+  }else{
+    vidas = vidas - 1;
+    mudaLevel = true;
+  }
+  if (energia <= 0){
+    mudaLevel = true;
+  }
 }
 
 Map.prototype.desenharLimites = function(ctx) {
@@ -26,6 +34,7 @@ Map.prototype.desenharLimites = function(ctx) {
         case 0:
           break;
         case 1:
+        case 2:
           ctx.fillStyle = 'brown';
           ctx.strokeStyle = 'chocolate';
           ctx.fillRect(j * this.SIZE, i * this.SIZE, this.SIZE, this.SIZE);
@@ -47,9 +56,11 @@ Map.prototype.desenharTiles = function(ctx) {
     for (var j = 0; j < linha.length; j++) {
       switch (this.cells[i][j]) {
         case 0:
+        case 3:
           this.imageLib.drawImageTile(ctx, "floor", 3, 1, 32, j*this.SIZE, i*this.SIZE);
           break;
         case 1:
+        case 2:
           this.imageLib.drawImageTile(ctx, "floor", 3, 1, 32, j*this.SIZE, i*this.SIZE);
           this.imageLib.drawImageTile(ctx, "mountain", 7, 10, 32, j*this.SIZE, i*this.SIZE);
           break;
@@ -66,6 +77,7 @@ Map.prototype.loadMap = function(map) {
       switch (map[i][j]) {
         case 0:
         case 1:
+        case 2:
           this.cells[i][j] = map[i][j];
           break;
         case 9:
@@ -73,7 +85,6 @@ Map.prototype.loadMap = function(map) {
           this.criaInimigo(i,j);
         break;
         default:
-
       }
     }
   }
@@ -123,25 +134,25 @@ Map.prototype.persegue = function(alvo) {
 Map.prototype.tiro = function (x, y, dir) {
     var tiro = new Sprite();
     if (pc.pose == 8){
-      tiro.x = pc.x+15;
+      tiro.x = pc.x+20;
       tiro.y = pc.y;
     } else if (pc.pose == 9){
-      tiro.x = pc.x-15;
+      tiro.x = pc.x-20;
       tiro.y = pc.y;
     } else if (pc.pose == 10){
       tiro.x = pc.x;
-      tiro.y = pc.y-15;
+      tiro.y = pc.y-20;
     } else if (pc.pose == 11){
       tiro.x = pc.x;
-      tiro.y = pc.y+15;
+      tiro.y = pc.y+20;
     }
-    tiro.SIZE=5;
+    tiro.SIZE=20;
     this.tiros.push(tiro);
 }
 
 Map.prototype.desenharTiros = function(ctx) {
   for (var i = 0; i < this.tiros.length; i++) {
-    this.tiros[i].desenharLimites(ctx);
+    //this.tiros[i].desenharLimites(ctx);
     this.tiros[i].destroyed = false;
     if (tempo < 0){
       this.tiros[i].destroyed = true
@@ -152,8 +163,9 @@ Map.prototype.desenharTiros = function(ctx) {
 Map.prototype.testarColisao = function(alvo){
   for (var i = 0; i < this.enemies.length; i++) {
     if(alvo.colidiuCom(this.enemies[i])){
-      this.enemies[i].destroyed = true;
-      this.delete();
+      energia = energia - dt*40;
+      this.enemies[i].vx = 0;
+      this.enemies[i].vy = 0;
     }
   }
 }
@@ -164,7 +176,8 @@ Map.prototype.testarColisaoTiros = function(map){
       if(this.tiros[j].colidiuCom(this.enemies[i])){
         this.tiros[j].destroyed = true;
         this.enemies[i].destroyed = true;
-        break;
+        inimigosMortos = inimigosMortos + 1;
+        score = score + 10;
       }
     }
   }
@@ -191,52 +204,76 @@ Map.prototype.delete = function(){
 }
 
 Map.prototype.alteraLevel = function(map){
-  if (map.cells[Math.floor(pc.y/40)][Math.floor(pc.x/40)] == 2){
+  for (var i = 0; i < this.cells.length; i++) {
+    for (var j = 0; j < this.cells[i].length; j++) {
+      if (inimigosMortos > 5 && this.cells[i][j] == 2){
+        this.cells[i][j] = 3;
+      }
+    }
+  }
+  if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3){
     level = level + 1;
-    if (level == 1){
+  }
+  if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3 || mudaLevel == true){
+    if (level % 4 == 0){
       casasMapa=([
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,0,9,1,0,0,0,0,9,1],
-        [1,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
-        [1,0,0,9,1,0,0,0,0,0,9,0,0,0,1],
-        [1,0,0,0,0,0,0,0,1,0,1,0,0,0,1],
-        [1,0,0,0,0,0,1,1,1,0,1,1,0,0,1],
-        [1,0,0,0,0,1,1,1,1,1,1,1,1,0,1],
-        [1,0,0,0,0,0,9,0,0,0,0,0,9,0,1],
-        [1,1,1,1,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,1,1,1,1,0,0,0,1,0,1],
-        [1,0,9,0,0,0,0,0,0,0,0,9,1,2,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 9, 1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 9, 0, 1],
+        [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
       ])
-    } else if (level == 2){
+    } else if (level % 4 == 1){
       casasMapa=([
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,0,9,1,0,0,0,0,9,1],
-        [1,0,0,0,1,0,1,0,1,0,0,0,0,0,1],
-        [1,0,0,9,1,0,1,0,0,0,9,0,0,0,1],
-        [1,0,0,0,1,0,1,0,1,0,1,0,0,0,1],
-        [1,0,0,0,0,0,1,1,1,0,1,1,0,0,1],
-        [1,1,0,1,1,1,1,1,1,1,1,1,1,0,1],
-        [1,0,0,0,0,0,9,0,0,0,1,0,9,0,1],
-        [1,1,1,1,0,0,0,0,0,0,1,0,0,0,1],
-        [1,0,0,0,0,1,1,1,1,0,1,0,1,0,1],
-        [1,0,9,0,0,0,0,0,0,0,0,9,1,2,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 1, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
+        [1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 9, 1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 9, 1],
+        [1, 0, 0, 0, 0, 0, 9, 0, 1, 0, 0, 1, 1, 1, 1],
+        [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1],
+        [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
       ])
-    } else if (level == 3){
+    } else if (level % 4 == 2){
       casasMapa=([
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,0,9,1,0,0,0,0,9,1],
-        [1,0,0,0,1,0,0,0,1,0,0,0,0,0,1],
-        [1,0,0,9,1,0,0,0,0,0,9,0,0,0,1],
-        [1,0,0,0,0,0,0,0,1,0,1,0,0,0,1],
-        [1,0,0,0,0,0,0,1,1,0,1,1,0,0,1],
-        [1,0,0,0,0,1,1,1,1,1,1,1,1,0,1],
-        [1,0,0,0,0,0,9,0,0,0,0,0,9,0,1],
-        [1,1,1,1,0,0,0,0,0,0,0,0,0,0,1],
-        [1,0,0,0,0,1,1,1,1,0,0,0,1,1,1],
-        [1,0,9,0,0,0,0,0,0,0,0,9,1,1,1],
-        [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
+        [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 9, 1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1],
+        [1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1, 9, 0, 0, 0, 0, 0, 1, 9, 1],
+        [1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
+      ])
+    }else if (level % 4 == 3){
+      casasMapa=([
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
+        [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 9, 1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1],
+        [1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1, 9, 0, 1, 0, 0, 0, 1, 9, 1],
+        [1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 9, 0, 0, 0, 0, 0, 1, 0, 0, 9, 1, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
       ])
     }
     for (var i = 0; i < this.enemies.length; i++) {
@@ -246,5 +283,11 @@ Map.prototype.alteraLevel = function(map){
     pc.x = 50;
     pc.y = 50;
     mapa.loadMap(casasMapa);
+    inimigosMortos = 0;
+    tempoRestante = 60;
+    scoreTotal = scoreTotal + score;
+    score = 0;
+    mudaLevel = false;
+    energia = 478;
   }
 }

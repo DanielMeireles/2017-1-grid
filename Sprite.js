@@ -78,7 +78,7 @@ function Sprite() {
       row: 15,
       col: 0,
       colMax: 5,
-      time: 8
+      time: 8,
     },
     //9 - Espadada para a esquerda
     {
@@ -86,7 +86,7 @@ function Sprite() {
       row: 13,
       col: 0,
       colMax: 5,
-      time: 8
+      time: 8,
     },
     //10 - Espadada para cima
     {
@@ -102,10 +102,8 @@ function Sprite() {
       row: 14,
       col: 0,
       colMax: 5,
-      time: 8
+      time: 8,
     },
-
-
   ]
 }
 
@@ -168,11 +166,11 @@ Sprite.prototype.moverOnMap = function(map, dt) {
   }
   var pos = map.getIndices(this);
 
-  if (this.vx > 0 && map.cells[pos.l][pos.c + 1] != 0) {
+  if (this.vx > 0 && map.cells[pos.l][pos.c + 1] == 1) {
     var dist = (pos.c + 1) * map.SIZE - (this.x + this.SIZE / 2);
     var mmax = Math.min(dist, this.vx * dt);
     this.x = this.x + mmax;
-  } else if (this.vx < 0 && map.cells[pos.l][pos.c - 1] != 0) {
+  } else if (this.vx < 0 && map.cells[pos.l][pos.c - 1] == 1) {
     var dist = (pos.c) * map.SIZE - (this.x - this.SIZE / 2);
     var mmax = Math.max(dist, this.vx * dt);
     this.x = this.x + mmax;
@@ -180,11 +178,11 @@ Sprite.prototype.moverOnMap = function(map, dt) {
     this.x = this.x + this.vx * dt;
   }
 
-  if (this.vy > 0 && map.cells[pos.l + 1][pos.c] != 0) {
+  if (this.vy > 0 && map.cells[pos.l + 1][pos.c] == 1) {
     var dist = (pos.l + 1) * map.SIZE - (this.y + this.SIZE / 2);
     var mmax = Math.min(dist, this.vy * dt);
     this.y = this.y + mmax;
-  } else if (this.vy < 0 && map.cells[pos.l - 1][pos.c] != 0) {
+  } else if (this.vy < 0 && map.cells[pos.l - 1][pos.c] == 1) {
     var dist = (pos.l) * map.SIZE - (this.y - this.SIZE / 2);
     var mmax = Math.max(dist, this.vy * dt);
     this.y = this.y + mmax;

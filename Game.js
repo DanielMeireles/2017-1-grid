@@ -6,13 +6,21 @@ var mapa;
 var pc;
 var imglib;
 var tempo = 0;
+var tempoRestante = 60;
+var level = 1;
+var vidas = 3;
+var energia = 478;
+var inimigosMortos = 0;
+var score = 0;
+var scoreTotal = 0;
+var mudaLevel = false;
 
 function init() {
   tela = document.getElementsByTagName('canvas')[0];
   tela.width = 600;
-  tela.height = 480;
+  //tela.height = 480;
+  tela.height = 600;
   ctx = tela.getContext('2d');
-  level = 1;
   casasMapa = ([
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
@@ -23,14 +31,15 @@ function init() {
     [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
     [1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 9, 0, 1],
     [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 2, 1],
-    [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 1, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1],
+    [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 0, 1],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
   ]);
   imglib = new ImageLoader();
   imglib.load("pc", "pc.png");
   imglib.load("floor", "LPC Base Assets/tiles/dirt2.png");
   imglib.load("mountain", "LPC Base Assets/tiles/mountains.png");
+  imglib.load("inimigo", "enemies.png")
   mapa = new Map(12, 15);
   mapa.imageLib = imglib;
   mapa.loadMap(casasMapa);
@@ -57,8 +66,9 @@ function passo(t) {
   pc.desenhar(ctx);
   mapa.alteraLevel(mapa);
   tempo = tempo - dt;
-  console.log(tempo);
+  tempoRestante = tempoRestante - dt;
   antes = t;
+  informacoes(ctx);
 }
 
 
@@ -164,4 +174,25 @@ function configuraControles() {
     }
   }
   });
+}
+
+function informacoes(ctx){
+  ctx.fillStyle = "black";
+  ctx.fillRect (0, 388, 482, 70);
+  ctx.fillStyle = "grey";
+  ctx.fillRect (0, 388, 482, 19);
+  ctx.fillStyle = "hsl("+energia/480*120+",100%,50%)";
+  ctx.fillRect (2, 390, energia, 15);
+  ctx.textAlign="center";
+  ctx.fillStyle = "black";
+  ctx.font = "1em Arial Black";
+  ctx.fillText("ENERGIA", 241, 403);
+  ctx.textAlign="left";
+  ctx.fillStyle = "white";
+  ctx.fillText("Level: "+ level, 0, 425);
+  ctx.fillText("Vidas: "+ vidas, 0, 445);
+  ctx.textAlign="right";
+  ctx.fillText("Inimigos Mortos: "+ inimigosMortos, 482, 445);
+  ctx.fillStyle = "hsl("+tempoRestante/60*120+",100%,50%)";
+  ctx.fillText("Tempo Restante: "+ tempoRestante.toFixed(), 482, 425);
 }
