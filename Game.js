@@ -100,7 +100,18 @@ function configuraControles() {
         e.preventDefault();
         break;
       case 32:
-        mapa.tiro(pc.x, pc.y, pc.dir);
+        pc.vx = 0;
+        pc.vy = 0;
+        if (pc.pose == 0 || pc.pose == 4){
+          pc.pose = 8;
+        } else if (pc.pose == 2 || pc.pose == 6){
+          pc.pose = 9;
+        } else if (pc.pose == 1 || pc.pose == 5){
+          pc.pose = 11;
+        } else if (pc.pose == 3 || pc.pose == 7){
+          pc.pose = 10;
+        }
+        mapa.tiro(pc.x, pc.y);
         break;
       default:
     }

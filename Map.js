@@ -40,6 +40,7 @@ Map.prototype.desenharLimites = function(ctx) {
   }
   this.desenharInimigos(ctx);
 };
+
 Map.prototype.desenharTiles = function(ctx) {
   for (var i = 0; i < this.cells.length; i++) {
     var linha = this.cells[i];
@@ -121,27 +122,20 @@ Map.prototype.persegue = function(alvo) {
 
 Map.prototype.tiro = function (x, y, dir) {
     var tiro = new Sprite();
-    tiro.x = x;
-    tiro.y = y;
-    tiro.SIZE=5;
-    switch (dir) {
-      case 1:
-        tiro.vx = -200;
-        tiro.vy = 0;
-      break;
-      case 2:
-        tiro.vy = -200;
-        tiro.vx = 0;
-      break;
-      case 3:
-        tiro.vx = +200;
-        tiro.vy = 0;
-      break;
-      case 4:
-        tiro.vy = +200;
-        tiro.vx = 0;
-      break;
+    if (pc.pose == 0){
+      tiro.x = pc.x+15;
+      tiro.y = pc.y;
+    } else if (pc.pose == 2){
+      tiro.x = pc.x-15;
+      tiro.y = pc.y;
+    } else if (pc.pose == 3){
+      tiro.x = pc.x;
+      tiro.y = pc.y-15;
+    } else if (pc.pose == 1){
+      tiro.x = pc.x;
+      tiro.y = pc.y+15;
     }
+    tiro.SIZE=5;
     this.tiros.push(tiro);
 }
 

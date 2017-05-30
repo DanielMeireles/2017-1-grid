@@ -8,6 +8,7 @@ function Sprite() {
   this.pose = 0;
   this.frame = 0;
   this.poses = [
+    //0 - Caminhada para a direita com espada na mão
     {
       key: "pc",
       row: 11,
@@ -15,6 +16,7 @@ function Sprite() {
       colMax: 7,
       time: 8
     },
+    //1 - Caminhada para baixo com espada na mão
     {
       key: "pc",
       row: 10,
@@ -22,6 +24,7 @@ function Sprite() {
       colMax: 7,
       time: 8
     },
+    //2 - Caminhada para a esquerda com espada na mão
     {
       key: "pc",
       row: 9,
@@ -29,6 +32,7 @@ function Sprite() {
       colMax: 7,
       time: 8
     },
+    //3 - Caminhada para cima com espada na mão
     {
       key: "pc",
       row: 8,
@@ -36,6 +40,7 @@ function Sprite() {
       colMax: 7,
       time: 8
     },
+    //4 - Parado para a direita com espada na mão
     {
       key: "pc",
       row: 11,
@@ -43,6 +48,7 @@ function Sprite() {
       colMax: 0,
       time: 8
     },
+    //5 - Parado para baixo com espada na mão
     {
       key: "pc",
       row: 10,
@@ -50,6 +56,7 @@ function Sprite() {
       colMax: 0,
       time: 8
     },
+    //6 - Parado para a esquerda com espada na mão
     {
       key: "pc",
       row: 9,
@@ -57,6 +64,7 @@ function Sprite() {
       colMax: 0,
       time: 8
     },
+    //7 - Parado para cima com espada na mão
     {
       key: "pc",
       row: 8,
@@ -64,6 +72,39 @@ function Sprite() {
       colMax: 0,
       time: 8
     },
+    //8 - Espadada para a direita
+    {
+      key: "pc",
+      row: 15,
+      col: 0,
+      colMax: 5,
+      time: 8
+    },
+    //9 - Espadada para a esquerda
+    {
+      key: "pc",
+      row: 13,
+      col: 0,
+      colMax: 5,
+      time: 8
+    },
+    //10 - Espadada para cima
+    {
+      key: "pc",
+      row: 12,
+      col: 0,
+      colMax: 5,
+      time: 8
+    },
+    //11 - Espadada para baixo
+    {
+      key: "pc",
+      row: 14,
+      col: 0,
+      colMax: 5,
+      time: 8
+    },
+
 
   ]
 }
