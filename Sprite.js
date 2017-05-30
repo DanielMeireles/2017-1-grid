@@ -5,7 +5,7 @@ function Sprite() {
   this.vy = 0;
   this.SIZE = 15;
   this.imageLib;
-  this.pose = 0;
+  this.pose = 4;
   this.frame = 0;
   this.poses = [
     //0 - Caminhada para a direita com espada na mão
@@ -112,10 +112,18 @@ function Sprite() {
 Sprite.prototype.desenhar = function(ctx) {
   this.desenharPose(ctx);
   if(this.debug) this.desenharLimites(ctx);
-
 }
 
 Sprite.prototype.desenharPose = function(ctx) {
+  if (pc.pose == 8 && tempo <= 0){
+    pc.pose = 4;
+  }else if (pc.pose == 9 && tempo <= 0){
+    pc.pose = 6;
+  }else if (pc.pose == 10 && tempo <= 0){
+    pc.pose = 7;
+  }else if (pc.pose == 11 && tempo <= 0){
+    pc.pose = 5;
+  }
   ctx.fillStyle = "black";
   ctx.globalAlpha = 0.4;
   ctx.beginPath();
@@ -130,10 +138,6 @@ Sprite.prototype.desenharPose = function(ctx) {
     64,
     this.x - 32, this.y - 53
   );
-  /*
-  ctx.fillStyle = "white";
-  ctx.fillText(Math.floor(this.frame), this.x, this.y);
-  console.log(Math.floor(this.frame));*/
 }
 
 Sprite.prototype.desenharLimites = function(ctx) {
@@ -163,7 +167,6 @@ Sprite.prototype.moverOnMap = function(map, dt) {
     this.frame = this.poses[this.pose].col;
   }
   var pos = map.getIndices(this);
-  //if (map.cells[pos.l][pos.c] != 0) return;
 
   if (this.vx > 0 && map.cells[pos.l][pos.c + 1] != 0) {
     var dist = (pos.c + 1) * map.SIZE - (this.x + this.SIZE / 2);

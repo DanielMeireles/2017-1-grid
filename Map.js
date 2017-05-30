@@ -122,16 +122,16 @@ Map.prototype.persegue = function(alvo) {
 
 Map.prototype.tiro = function (x, y, dir) {
     var tiro = new Sprite();
-    if (pc.pose == 0){
+    if (pc.pose == 8){
       tiro.x = pc.x+15;
       tiro.y = pc.y;
-    } else if (pc.pose == 2){
+    } else if (pc.pose == 9){
       tiro.x = pc.x-15;
       tiro.y = pc.y;
-    } else if (pc.pose == 3){
+    } else if (pc.pose == 10){
       tiro.x = pc.x;
       tiro.y = pc.y-15;
-    } else if (pc.pose == 1){
+    } else if (pc.pose == 11){
       tiro.x = pc.x;
       tiro.y = pc.y+15;
     }
@@ -143,18 +143,9 @@ Map.prototype.desenharTiros = function(ctx) {
   for (var i = 0; i < this.tiros.length; i++) {
     this.tiros[i].desenharLimites(ctx);
     this.tiros[i].destroyed = false;
-  }
-}
-
-Map.prototype.moverTirosOnMap = function(map, dt) {
-  for (var i = 0; i < this.tiros.length; i++) {
-    this.tiros[i].moverOnMap(map,dt);
-  }
-}
-
-Map.prototype.moverTiros = function(map, dt) {
-  for (var i = 0; i < this.tiros.length; i++) {
-    this.tiros[i].mover(dt);
+    if (tempo < 0){
+      this.tiros[i].destroyed = true
+    }
   }
 }
 

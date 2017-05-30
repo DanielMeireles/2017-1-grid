@@ -5,6 +5,7 @@ var dt = 0;
 var mapa;
 var pc;
 var imglib;
+var tempo = 0;
 
 function init() {
   tela = document.getElementsByTagName('canvas')[0];
@@ -52,16 +53,18 @@ function passo(t) {
   mapa.testarColisaoTiros(mapa);
   pc.moverOnMap(mapa, dt);
   mapa.moverInimigosOnMap(mapa, dt);
-  mapa.moverTiros(mapa, dt);
   mapa.desenhar(ctx);
   pc.desenhar(ctx);
-  imglib.drawImageTile(ctx, "pc", 3, 0, 64, 0, 0);
   mapa.alteraLevel(mapa);
+  tempo = tempo - dt;
+  console.log(tempo);
   antes = t;
 }
 
+
 function configuraControles() {
   addEventListener("keydown", function(e) {
+    if (tempo <= 0){
     switch (e.keyCode) {
       case 37:
         pc.vx = -100;
@@ -112,15 +115,14 @@ function configuraControles() {
           pc.pose = 10;
         }
         mapa.tiro(pc.x, pc.y);
+        tempo = 0.7;
         break;
       default:
     }
+}
   });
-  }
-
-
-
   addEventListener("keyup", function(e) {
+    if (tempo <= 0){
     switch (e.keyCode) {
       case 37:
         pc.vx = 0;
@@ -160,4 +162,6 @@ function configuraControles() {
         break;
       default:
     }
+  }
   });
+}
