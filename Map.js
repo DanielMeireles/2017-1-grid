@@ -31,7 +31,7 @@ Map.prototype.desenharLimites = function(ctx) {
   for (var i = 0; i < this.cells.length; i++) {
     var linha = this.cells[i];
     for (var j = 0; j < linha.length; j++) {
-      switch (this.cells[i][j]) {
+      /*switch (this.cells[i][j]) {
         case 0:
           break;
         case 1:
@@ -45,7 +45,7 @@ Map.prototype.desenharLimites = function(ctx) {
         default:
           ctx.fillStyle = 'red';
           ctx.fillRect(j * this.SIZE, i * this.SIZE, this.SIZE, this.SIZE);
-      }
+      }*/
     }
   }
   this.desenharInimigos(ctx);
@@ -248,11 +248,9 @@ Map.prototype.testarColisaoTiros = function(map){
       }
     }
   }
-  //this.delete();
   for (var j = this.tiros.length-1; j>=0; j--) {
     if (map.cells[Math.floor(this.tiros[j].y/32)][Math.floor(this.tiros[j].x/32)] == 1){
       this.tiros[j].destroyed = true;
-
     }
   }
   this.delete();
@@ -271,7 +269,7 @@ Map.prototype.delete = function(){
   }
 }
 
-Map.prototype.alteraLevel = function(map){
+Map.prototype.alteraLevel = function(map, ctx){
   for (var i = 0; i < this.cells.length; i++) {
     for (var j = 0; j < this.cells[i].length; j++) {
       if (inimigosMortos > 7 && this.cells[i][j] == 2){
@@ -356,6 +354,6 @@ Map.prototype.alteraLevel = function(map){
     scoreTotal = scoreTotal + score;
     score = 0;
     mudaLevel = false;
-    energia = 478;
+    energia = 476;
   }
 }

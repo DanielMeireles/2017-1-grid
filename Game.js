@@ -75,7 +75,7 @@ function passo(t) {
   mapa.moverInimigosOnMap(mapa, dt);
   mapa.desenhar(ctx);
   pc.desenhar(ctx);
-  mapa.alteraLevel(mapa);
+  mapa.alteraLevel(mapa, ctx);
   tempo = tempo - dt;
   tempoRestante = tempoRestante - dt;
   informacoes(ctx);
@@ -190,10 +190,10 @@ function configuraControles() {
 
 function informacoes(ctx){
   ctx.fillStyle = "black";
-  ctx.fillRect (0, 388, 482, 90);
+  ctx.fillRect (0, 384, 480, 90);
   ctx.fillStyle = "grey";
-  ctx.fillRect (0, 388, 482, 19);
-  ctx.fillStyle = "hsl("+energia/480*120+",100%,50%)";
+  ctx.fillRect (0, 388, 480, 19);
+  ctx.fillStyle = "hsl("+energia/476*120+",100%,50%)";
   ctx.fillRect (2, 390, energia, 15);
   ctx.textAlign="center";
   ctx.fillStyle = "black";
@@ -201,25 +201,25 @@ function informacoes(ctx){
   ctx.fillText("ENERGIA", 241, 403);
   ctx.textAlign="left";
   ctx.fillStyle = "white";
-  ctx.fillText("Level: "+ level, 0, 425);
-  ctx.fillText("Vidas: "+ vidas, 0, 445);
-  ctx.fillText("Inimigos Mortos: "+ inimigosMortos, 0, 465);
+  ctx.fillText("Level: "+ level, 2, 425);
+  ctx.fillText("Vidas: "+ vidas, 2, 445);
+  ctx.fillText("Inimigos Mortos: "+ inimigosMortos, 2, 465);
   ctx.textAlign="right";
-  ctx.fillText("Score: "+ score, 482, 445);
-  ctx.fillText("Score Total: "+ scoreTotal, 482, 465);
+  ctx.fillText("Score: "+ score, 476, 445);
+  ctx.fillText("Score Total: "+ scoreTotal, 476, 465);
   ctx.fillStyle = "hsl("+tempoRestante/60*120+",100%,50%)";
-  ctx.fillText("Tempo Restante: "+ tempoRestante.toFixed(), 482, 425);
+  ctx.fillText("Tempo Restante: "+ tempoRestante.toFixed(), 476, 425);
 }
 function telas(){
   if (vidas == 0){
     ctx.fillStyle = "black";
-    ctx.fillRect (0, 0, 482, 400);
+    ctx.fillRect (0, 0, 480, 400);
     var texto1 = "GAME OVER";
     var texto2 = "VOCÊ PERDEU TODAS AS VIDAS"
     textoFormatado(texto1 ,texto2, "", "");
   } else if (level > 10){
     ctx.fillStyle = "black";
-    ctx.fillRect (0, 0, 482, 400);
+    ctx.fillRect (0, 0, 480, 400);
     var texto1 = "PARÁBENS";
     var texto2 = "VOCÊ PASSOU POR TODOS OS NÍVEIS"
     textoFormatado(texto1 ,texto2, "", "");
