@@ -17,9 +17,8 @@ var mudaLevel = false;
 
 function init() {
   tela = document.getElementsByTagName('canvas')[0];
-  tela.width = 600;
-  //tela.height = 480;
-  tela.height = 600;
+  tela.width = 500;
+  tela.height = 480;
   ctx = tela.getContext('2d');
   casasMapa = ([
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -75,9 +74,8 @@ function passo(t) {
   mapa.alteraLevel(mapa);
   tempo = tempo - dt;
   tempoRestante = tempoRestante - dt;
-  antes = t;
   informacoes(ctx);
-  console.log(level % 4)
+  antes = t;
 }
 
 
@@ -187,7 +185,7 @@ function configuraControles() {
 
 function informacoes(ctx){
   ctx.fillStyle = "black";
-  ctx.fillRect (0, 388, 482, 70);
+  ctx.fillRect (0, 388, 482, 90);
   ctx.fillStyle = "grey";
   ctx.fillRect (0, 388, 482, 19);
   ctx.fillStyle = "hsl("+energia/480*120+",100%,50%)";
@@ -200,8 +198,10 @@ function informacoes(ctx){
   ctx.fillStyle = "white";
   ctx.fillText("Level: "+ level, 0, 425);
   ctx.fillText("Vidas: "+ vidas, 0, 445);
+  ctx.fillText("Inimigos Mortos: "+ inimigosMortos, 0, 465);
   ctx.textAlign="right";
-  ctx.fillText("Inimigos Mortos: "+ inimigosMortos, 482, 445);
+  ctx.fillText("Score: "+ score, 482, 445);
+  ctx.fillText("Score Total: "+ scoreTotal, 482, 465);
   ctx.fillStyle = "hsl("+tempoRestante/60*120+",100%,50%)";
   ctx.fillText("Tempo Restante: "+ tempoRestante.toFixed(), 482, 425);
 }

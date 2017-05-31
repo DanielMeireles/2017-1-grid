@@ -23,6 +23,7 @@ Map.prototype.desenhar = function(ctx){
   }
   if (energia <= 0){
     mudaLevel = true;
+    vidas = vidas - 1;
   }
 }
 
@@ -165,40 +166,7 @@ Map.prototype.criaInimigo = function (l,c) {
       colMax: 0,
       time: 8
     },
-    //8 - Espadada para a direita
-    {
-      key: "inimigo"+level,
-      row: 15,
-      col: 0,
-      colMax: 5,
-      time: 16
-    },
-    //9 - Espadada para a esquerda
-    {
-      key: "inimigo"+level,
-      row: 13,
-      col: 0,
-      colMax: 5,
-      time: 16
-    },
-    //10 - Espadada para cima
-    {
-      key: "inimigo"+level,
-      row: 12,
-      col: 0,
-      colMax: 5,
-      time: 16
-    },
-    //11 - Espadada para baixo
-    {
-      key: "inimigo"+level,
-      row: 14,
-      col: 0,
-      colMax: 5,
-      time: 16
-    },
   ];
-
   inimigo.imageLib = this.imageLib;
   inimigo.x = (c+0.5)*this.SIZE;
   inimigo.y = (l+0.5)*this.SIZE;
@@ -305,7 +273,7 @@ Map.prototype.delete = function(){
 Map.prototype.alteraLevel = function(map){
   for (var i = 0; i < this.cells.length; i++) {
     for (var j = 0; j < this.cells[i].length; j++) {
-      if (inimigosMortos > 5 && this.cells[i][j] == 2){
+      if (inimigosMortos > 7 && this.cells[i][j] == 2){
         this.cells[i][j] = 3;
       }
     }
