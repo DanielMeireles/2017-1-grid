@@ -64,6 +64,10 @@ function passo(t) {
   dt = (t - antes) / 1000;
   ctx.clearRect(0, 0, tela.width, tela.height);
   requestAnimationFrame(passo);
+  if (vidas == 0 || level > 10){
+    telas();
+    informacoes(ctx);
+  }else{
   mapa.persegue(pc);
   mapa.testarColisao(pc);
   mapa.testarColisaoTiros(mapa);
@@ -76,6 +80,7 @@ function passo(t) {
   tempoRestante = tempoRestante - dt;
   informacoes(ctx);
   antes = t;
+}
 }
 
 
@@ -204,4 +209,31 @@ function informacoes(ctx){
   ctx.fillText("Score Total: "+ scoreTotal, 482, 465);
   ctx.fillStyle = "hsl("+tempoRestante/60*120+",100%,50%)";
   ctx.fillText("Tempo Restante: "+ tempoRestante.toFixed(), 482, 425);
+}
+function telas(){
+  if (vidas == 0){
+    ctx.fillStyle = "black";
+    ctx.fillRect (0, 0, 482, 400);
+    var texto1 = "GAME OVER";
+    var texto2 = "VOCÊ PERDEU TODAS AS VIDAS"
+    textoFormatado(texto1 ,texto2, "", "");
+  } else if (level > 10){
+    ctx.fillStyle = "black";
+    ctx.fillRect (0, 0, 482, 400);
+    var texto1 = "PARÁBENS";
+    var texto2 = "VOCÊ PASSOU POR TODOS OS NÍVEIS"
+    textoFormatado(texto1 ,texto2, "", "");
+  }
+}
+
+function textoFormatado(texto1, texto2, texto3, texto4){
+  ctx.textAlign="center";
+  ctx.fillStyle = "red";
+  ctx.font = "3em Arial Black";
+  ctx.fillText(texto1, tela.width / 2, tela.height / 2);
+  ctx.fillStyle = "white";
+  ctx.font = "1em Arial Black";
+  ctx.fillText(texto2, tela.width / 2, tela.height / 2 + 20);
+  ctx.fillText(texto3, tela.width / 2, tela.height / 2 + 40);
+  ctx.fillText(texto4, tela.width / 2, tela.height / 2 + 60);
 }

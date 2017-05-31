@@ -248,13 +248,14 @@ Map.prototype.testarColisaoTiros = function(map){
       }
     }
   }
-  this.delete();
+  //this.delete();
   for (var j = this.tiros.length-1; j>=0; j--) {
     if (map.cells[Math.floor(this.tiros[j].y/32)][Math.floor(this.tiros[j].x/32)] == 1){
       this.tiros[j].destroyed = true;
-      this.delete();
+
     }
   }
+  this.delete();
 }
 
 Map.prototype.delete = function(){
@@ -343,10 +344,10 @@ Map.prototype.alteraLevel = function(map){
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
       ])
     }
-    for (var i = 0; i < this.enemies.length; i++) {
-      this.enemies[i].destroyed = true;
-      this.delete();
+    for (var k = 0; k < this.enemies.length; k++) {
+      this.enemies[k].destroyed = true;
     }
+    this.delete();
     pc.x = 50;
     pc.y = 50;
     mapa.loadMap(casasMapa);
