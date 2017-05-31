@@ -57,12 +57,12 @@ Map.prototype.desenharTiles = function(ctx) {
       switch (this.cells[i][j]) {
         case 0:
         case 3:
-          this.imageLib.drawImageTile(ctx, "floor", 3, 1, 32, j*this.SIZE, i*this.SIZE);
+          this.imageLib.drawImageTile(ctx, "piso", 0, level-1, 32, j*this.SIZE, i*this.SIZE);
           break;
         case 1:
         case 2:
-          this.imageLib.drawImageTile(ctx, "floor", 3, 1, 32, j*this.SIZE, i*this.SIZE);
-          this.imageLib.drawImageTile(ctx, "mountain", 7, 10, 32, j*this.SIZE, i*this.SIZE);
+          this.imageLib.drawImageTile(ctx, "piso", 0, level-1, 32, j*this.SIZE, i*this.SIZE);
+          this.imageLib.drawImageTile(ctx, "piso", 1, level-1, 32, j*this.SIZE, i*this.SIZE);
           break;
         default:
       }
@@ -100,6 +100,105 @@ Map.prototype.getIndices = function (sprite) {
 
 Map.prototype.criaInimigo = function (l,c) {
   var inimigo = new Sprite();
+  inimigo.poses = [
+    //0 - Caminhada para a direita com espada na mão
+    {
+      key: "inimigo"+level,
+      row: 11,
+      col: 0,
+      colMax: 7,
+      time: 8
+    },
+    //1 - Caminhada para baixo com espada na mão
+    {
+      key: "inimigo"+level,
+      row: 10,
+      col: 0,
+      colMax: 7,
+      time: 8
+    },
+    //2 - Caminhada para a esquerda com espada na mão
+    {
+      key: "inimigo"+level,
+      row: 9,
+      col: 0,
+      colMax: 7,
+      time: 8
+    },
+    //3 - Caminhada para cima com espada na mão
+    {
+      key: "inimigo"+level,
+      row: 8,
+      col: 0,
+      colMax: 7,
+      time: 8
+    },
+    //4 - Parado para a direita com espada na mão
+    {
+      key: "inimigo"+level,
+      row: 11,
+      col: 0,
+      colMax: 0,
+      time: 8
+    },
+    //5 - Parado para baixo com espada na mão
+    {
+      key: "inimigo"+level,
+      row: 10,
+      col: 0,
+      colMax: 0,
+      time: 8
+    },
+    //6 - Parado para a esquerda com espada na mão
+    {
+      key: "inimigo"+level,
+      row: 9,
+      col: 0,
+      colMax: 0,
+      time: 8
+    },
+    //7 - Parado para cima com espada na mão
+    {
+      key: "inimigo"+level,
+      row: 8,
+      col: 0,
+      colMax: 0,
+      time: 8
+    },
+    //8 - Espadada para a direita
+    {
+      key: "inimigo"+level,
+      row: 15,
+      col: 0,
+      colMax: 5,
+      time: 16
+    },
+    //9 - Espadada para a esquerda
+    {
+      key: "inimigo"+level,
+      row: 13,
+      col: 0,
+      colMax: 5,
+      time: 16
+    },
+    //10 - Espadada para cima
+    {
+      key: "inimigo"+level,
+      row: 12,
+      col: 0,
+      colMax: 5,
+      time: 16
+    },
+    //11 - Espadada para baixo
+    {
+      key: "inimigo"+level,
+      row: 14,
+      col: 0,
+      colMax: 5,
+      time: 16
+    },
+  ];
+
   inimigo.imageLib = this.imageLib;
   inimigo.x = (c+0.5)*this.SIZE;
   inimigo.y = (l+0.5)*this.SIZE;
@@ -215,7 +314,7 @@ Map.prototype.alteraLevel = function(map){
     level = level + 1;
   }
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3 || mudaLevel == true){
-    if (level % 4 == 0){
+    if (level % 4 == 1){
       casasMapa=([
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
@@ -230,7 +329,7 @@ Map.prototype.alteraLevel = function(map){
         [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
       ])
-    } else if (level % 4 == 1){
+    } else if (level % 4 == 2){
       casasMapa=([
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 1, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
@@ -245,7 +344,7 @@ Map.prototype.alteraLevel = function(map){
         [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
       ])
-    } else if (level % 4 == 2){
+    } else if (level % 4 == 3){
       casasMapa=([
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
@@ -260,7 +359,7 @@ Map.prototype.alteraLevel = function(map){
         [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
       ])
-    }else if (level % 4 == 3){
+    }else if (level % 4 == 0){
       casasMapa=([
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],

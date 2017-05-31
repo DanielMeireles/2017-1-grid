@@ -37,9 +37,17 @@ function init() {
   ]);
   imglib = new ImageLoader();
   imglib.load("pc", "pc.png");
-  imglib.load("floor", "LPC Base Assets/tiles/dirt2.png");
-  imglib.load("mountain", "LPC Base Assets/tiles/mountains.png");
-  imglib.load("inimigo", "enemies.png")
+  imglib.load("piso", "piso.png");
+  imglib.load("inimigo1", "enemies/enemies1.png")
+  imglib.load("inimigo2", "enemies/enemies2.png")
+  imglib.load("inimigo3", "enemies/enemies3.png")
+  imglib.load("inimigo4", "enemies/enemies4.png")
+  imglib.load("inimigo5", "enemies/enemies5.png")
+  imglib.load("inimigo6", "enemies/enemies6.png")
+  imglib.load("inimigo7", "enemies/enemies7.png")
+  imglib.load("inimigo8", "enemies/enemies8.png")
+  imglib.load("inimigo9", "enemies/enemies9.png")
+  imglib.load("inimigo10", "enemies/enemies10.png")
   mapa = new Map(12, 15);
   mapa.imageLib = imglib;
   mapa.loadMap(casasMapa);
@@ -69,6 +77,7 @@ function passo(t) {
   tempoRestante = tempoRestante - dt;
   antes = t;
   informacoes(ctx);
+  console.log(level % 4)
 }
 
 
@@ -125,7 +134,7 @@ function configuraControles() {
           pc.pose = 10;
         }
         mapa.tiro(pc.x, pc.y);
-        tempo = 0.7;
+        tempo = 0.35;
         break;
       default:
     }

@@ -78,7 +78,7 @@ function Sprite() {
       row: 15,
       col: 0,
       colMax: 5,
-      time: 8,
+      time: 16
     },
     //9 - Espadada para a esquerda
     {
@@ -86,7 +86,7 @@ function Sprite() {
       row: 13,
       col: 0,
       colMax: 5,
-      time: 8,
+      time: 16
     },
     //10 - Espadada para cima
     {
@@ -94,7 +94,7 @@ function Sprite() {
       row: 12,
       col: 0,
       colMax: 5,
-      time: 8
+      time: 16
     },
     //11 - Espadada para baixo
     {
@@ -102,7 +102,7 @@ function Sprite() {
       row: 14,
       col: 0,
       colMax: 5,
-      time: 8,
+      time: 16
     },
   ]
 }
