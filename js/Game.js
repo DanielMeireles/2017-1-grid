@@ -35,19 +35,19 @@ function init() {
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
   ]);
   imglib = new ImageLoader();
-  imglib.load("pc", "pc.png");
-  imglib.load("piso", "piso.png");
-  imglib.load("explosao", "explosao.png");
-  imglib.load("inimigo1", "enemies/enemies1.png")
-  imglib.load("inimigo2", "enemies/enemies2.png")
-  imglib.load("inimigo3", "enemies/enemies3.png")
-  imglib.load("inimigo4", "enemies/enemies4.png")
-  imglib.load("inimigo5", "enemies/enemies5.png")
-  imglib.load("inimigo6", "enemies/enemies6.png")
-  imglib.load("inimigo7", "enemies/enemies7.png")
-  imglib.load("inimigo8", "enemies/enemies8.png")
-  imglib.load("inimigo9", "enemies/enemies9.png")
-  imglib.load("inimigo10", "enemies/enemies10.png")
+  imglib.load("pc", "img/pc.png");
+  imglib.load("piso", "img/floor.png");
+  imglib.load("explosao", "img/explosion.png");
+  imglib.load("inimigo1", "img/enemies1.png")
+  imglib.load("inimigo2", "img/enemies2.png")
+  imglib.load("inimigo3", "img/enemies3.png")
+  imglib.load("inimigo4", "img/enemies4.png")
+  imglib.load("inimigo5", "img/enemies5.png")
+  imglib.load("inimigo6", "img/enemies6.png")
+  imglib.load("inimigo7", "img/enemies7.png")
+  imglib.load("inimigo8", "img/enemies8.png")
+  imglib.load("inimigo9", "img/enemies9.png")
+  imglib.load("inimigo10", "img/enemies10.png")
   mapa = new Map(12, 15);
   mapa.imageLib = imglib;
   mapa.loadMap(casasMapa);

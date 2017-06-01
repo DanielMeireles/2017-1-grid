@@ -294,6 +294,7 @@ Map.prototype.testarColisaoEspadas = function(map){
         this.enemies[i].destroyed = true;
         inimigosMortos = inimigosMortos + 1;
         score = score + 10;
+        break;
       }
     }
   }
