@@ -327,6 +327,9 @@ Map.prototype.alteraLevel = function(map, ctx){
       }
     }
   }
+  if (this.cells[11][13] != 3){
+    explosao.tempo = 0;
+  }
   if (this.cells[11][13] == 3 && explosao.tempo < 16){
   this.imageLib.drawImageTile(ctx,
     "explosao",
