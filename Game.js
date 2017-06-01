@@ -37,6 +37,7 @@ function init() {
   imglib = new ImageLoader();
   imglib.load("pc", "pc.png");
   imglib.load("piso", "piso.png");
+  imglib.load("explosao", "explosao.png");
   imglib.load("inimigo1", "enemies/enemies1.png")
   imglib.load("inimigo2", "enemies/enemies2.png")
   imglib.load("inimigo3", "enemies/enemies3.png")
@@ -55,6 +56,8 @@ function init() {
   pc.x = 50;
   pc.y = 50;
   pc.dir = 1;
+  explosao = new Sprite();
+  explosao.tempo = 0;
   configuraControles();
 
   requestAnimationFrame(passo);

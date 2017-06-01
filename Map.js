@@ -277,6 +277,17 @@ Map.prototype.alteraLevel = function(map, ctx){
       }
     }
   }
+  if (this.cells[11][13] == 3 && explosao.tempo < 16){
+  this.imageLib.drawImageTile(ctx,
+    "explosao",
+    0,
+    Math.floor(explosao.tempo),
+    32,
+    416, 354
+  );
+  explosao.tempo = explosao.tempo + (dt*30);
+  }
+
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3){
     level = level + 1;
   }
