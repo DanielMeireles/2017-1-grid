@@ -73,7 +73,7 @@ function passo(t) {
   }else{
   mapa.persegue(pc);
   mapa.testarColisao(pc);
-  mapa.testarColisaoTiros(mapa);
+  mapa.testarColisaoEspadas(mapa);
   pc.moverOnMap(mapa, dt);
   mapa.moverInimigosOnMap(mapa, dt);
   mapa.desenhar(ctx);
@@ -139,7 +139,7 @@ function configuraControles() {
         } else if (pc.pose == 3 || pc.pose == 7){
           pc.pose = 10;
         }
-        mapa.tiro(pc.x, pc.y);
+        mapa.espada(pc.x, pc.y);
         tempo = 0.35;
         break;
       default:

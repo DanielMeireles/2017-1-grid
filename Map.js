@@ -2,7 +2,7 @@ function Map(l, c) {
   this.SIZE = 32;
   this.cells = [];
   this.enemies = [];
-  this.tiros = [];
+  this.espadas = [];
   this.imageLib = null;
 
   for (var i = 0; i < l; i++) {
@@ -16,7 +16,7 @@ Map.prototype.desenhar = function(ctx){
   if (tempoRestante > 0){
     this.desenharLimites(ctx);
     this.desenharTiles(ctx);
-    this.desenharTiros(ctx);
+    this.desenharEspadas(ctx);
   }else{
     vidas = vidas - 1;
     mudaLevel = true;
@@ -31,7 +31,7 @@ Map.prototype.desenharLimites = function(ctx) {
   for (var i = 0; i < this.cells.length; i++) {
     var linha = this.cells[i];
     for (var j = 0; j < linha.length; j++) {
-      /*switch (this.cells[i][j]) {
+      switch (this.cells[i][j]) {
         case 0:
           break;
         case 1:
@@ -45,7 +45,7 @@ Map.prototype.desenharLimites = function(ctx) {
         default:
           ctx.fillStyle = 'red';
           ctx.fillRect(j * this.SIZE, i * this.SIZE, this.SIZE, this.SIZE);
-      }*/
+      }//Comentar
     }
   }
   this.desenharInimigos(ctx);
@@ -198,31 +198,31 @@ Map.prototype.persegue = function(alvo) {
   }
 }
 
-Map.prototype.tiro = function (x, y, dir) {
-    var tiro = new Sprite();
+Map.prototype.espada = function (x, y, dir) {
+    var espada = new Sprite();
     if (pc.pose == 8){
-      tiro.x = pc.x+20;
-      tiro.y = pc.y;
+      espada.x = pc.x+20;
+      espada.y = pc.y;
     } else if (pc.pose == 9){
-      tiro.x = pc.x-20;
-      tiro.y = pc.y;
+      espada.x = pc.x-20;
+      espada.y = pc.y;
     } else if (pc.pose == 10){
-      tiro.x = pc.x;
-      tiro.y = pc.y-20;
+      espada.x = pc.x;
+      espada.y = pc.y-20;
     } else if (pc.pose == 11){
-      tiro.x = pc.x;
-      tiro.y = pc.y+20;
+      espada.x = pc.x;
+      espada.y = pc.y+20;
     }
-    tiro.SIZE=20;
-    this.tiros.push(tiro);
+    espada.SIZE=20;
+    this.espadas.push(espada);
 }
 
-Map.prototype.desenharTiros = function(ctx) {
-  for (var i = 0; i < this.tiros.length; i++) {
-    //this.tiros[i].desenharLimites(ctx);
-    this.tiros[i].destroyed = false;
+Map.prototype.desenharEspadas = function(ctx) {
+  for (var i = 0; i < this.espadas.length; i++) {
+    this.espadas[i].desenharLimites(ctx);//Comentar
+    this.espadas[i].destroyed = false;
     if (tempo < 0){
-      this.tiros[i].destroyed = true
+      this.espadas[i].destroyed = true
     }
   }
 }
@@ -237,29 +237,29 @@ Map.prototype.testarColisao = function(alvo){
   }
 }
 
-Map.prototype.testarColisaoTiros = function(map){
+Map.prototype.testarColisaoEspadas = function(map){
   for (var i = this.enemies.length-1; i>=0; i--) {
-    for (var j = this.tiros.length-1; j>=0; j--) {
-      if(this.tiros[j].colidiuCom(this.enemies[i])){
-        this.tiros[j].destroyed = true;
+    for (var j = this.espadas.length-1; j>=0; j--) {
+      if(this.espadas[j].colidiuCom(this.enemies[i])){
+        this.espadas[j].destroyed = true;
         this.enemies[i].destroyed = true;
         inimigosMortos = inimigosMortos + 1;
         score = score + 10;
       }
     }
   }
-  for (var j = this.tiros.length-1; j>=0; j--) {
-    if (map.cells[Math.floor(this.tiros[j].y/32)][Math.floor(this.tiros[j].x/32)] == 1){
-      this.tiros[j].destroyed = true;
+  for (var j = this.espadas.length-1; j>=0; j--) {
+    if (map.cells[Math.floor(this.espadas[j].y/32)][Math.floor(this.espadas[j].x/32)] == 1){
+      this.espadas[j].destroyed = true;
     }
   }
   this.delete();
 }
 
 Map.prototype.delete = function(){
-  for (var j = this.tiros.length-1; j>=0; j--) {
-    if (this.tiros[j].destroyed == true){
-      this.tiros.splice(j,1);
+  for (var j = this.espadas.length-1; j>=0; j--) {
+    if (this.espadas[j].destroyed == true){
+      this.espadas.splice(j,1);
     }
   }
   for (var i = this.enemies.length-1; i>=0; i--) {
