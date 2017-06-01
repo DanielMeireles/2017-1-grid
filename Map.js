@@ -285,7 +285,7 @@ Map.prototype.alteraLevel = function(map, ctx){
     32,
     416, 354
   );
-  explosao.tempo = explosao.tempo + (dt*30);
+  explosao.tempo = explosao.tempo + (dt*20);
   }
 
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3){
