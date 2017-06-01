@@ -31,7 +31,7 @@ Map.prototype.desenharLimites = function(ctx) {
   for (var i = 0; i < this.cells.length; i++) {
     var linha = this.cells[i];
     for (var j = 0; j < linha.length; j++) {
-      switch (this.cells[i][j]) {
+      /*switch (this.cells[i][j]) {
         case 0:
           break;
         case 1:
@@ -45,7 +45,7 @@ Map.prototype.desenharLimites = function(ctx) {
         default:
           ctx.fillStyle = 'red';
           ctx.fillRect(j * this.SIZE, i * this.SIZE, this.SIZE, this.SIZE);
-      }//Comentar
+      }*/
     }
   }
   this.desenharInimigos(ctx);
@@ -166,10 +166,43 @@ Map.prototype.criaInimigo = function (l,c) {
       colMax: 0,
       time: 8
     },
+    //8 - Soco para cima
+    {
+      key: "inimigo"+level,
+      row: 16,
+      col: 0,
+      colMax: 12,
+      time: 12
+    },
+    //9 - Soco para a esquerda
+    {
+      key: "inimigo"+level,
+      row: 17,
+      col: 0,
+      colMax: 12,
+      time: 12
+    },
+    //10 - Soco para baixo
+    {
+      key: "inimigo"+level,
+      row: 18,
+      col: 0,
+      colMax: 12,
+      time: 12
+    },
+    //11 - Soco para a direita
+    {
+      key: "inimigo"+level,
+      row: 19,
+      col: 0,
+      colMax: 12,
+      time: 12
+    },
   ];
   inimigo.imageLib = this.imageLib;
   inimigo.x = (c+0.5)*this.SIZE;
   inimigo.y = (l+0.5)*this.SIZE;
+  inimigo.dir;
   this.enemies.push(inimigo);
 };
 
@@ -219,7 +252,7 @@ Map.prototype.espada = function (x, y, dir) {
 
 Map.prototype.desenharEspadas = function(ctx) {
   for (var i = 0; i < this.espadas.length; i++) {
-    this.espadas[i].desenharLimites(ctx);//Comentar
+    //this.espadas[i].desenharLimites(ctx);
     this.espadas[i].destroyed = false;
     if (tempo < 0){
       this.espadas[i].destroyed = true
@@ -233,6 +266,21 @@ Map.prototype.testarColisao = function(alvo){
       energia = energia - dt*40;
       this.enemies[i].vx = 0;
       this.enemies[i].vy = 0;
+      switch (this.enemies[i].pose) {
+        case 3:
+          this.enemies[i].pose = 8;
+          break;
+        case 2:
+          this.enemies[i].pose = 9;
+          break;
+        case 1:
+          this.enemies[i].pose = 10;
+          break;
+        case 0:
+          this.enemies[i].pose = 11;
+          break;
+        default:
+      }
     }
   }
 }
@@ -242,6 +290,7 @@ Map.prototype.testarColisaoEspadas = function(map){
     for (var j = this.espadas.length-1; j>=0; j--) {
       if(this.espadas[j].colidiuCom(this.enemies[i])){
         this.espadas[j].destroyed = true;
+        this.delete();
         this.enemies[i].destroyed = true;
         inimigosMortos = inimigosMortos + 1;
         score = score + 10;

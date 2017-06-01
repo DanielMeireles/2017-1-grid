@@ -197,6 +197,16 @@ Sprite.prototype.persegue = function(alvo) {
   var dist = Math.sqrt(Math.pow(alvo.x - this.x, 2) + Math.pow(alvo.y - this.y, 2));
   this.vx = 40 * (alvo.x - this.x) / dist;
   this.vy = 40 * (alvo.y - this.y) / dist;
+  if (this.vy > 0){
+    this.dir = 2;
+  } else if (this.vy < 0){
+    this.dir = 8;
+  } else if (this.vx > 0){
+    this.dir = 6;
+  } else if (this.vx < 0){
+    this.dir = 4;
+  }
+
   if (Math.abs(this.vy) > Math.abs(this.vx)) {
     if (this.vy > 0) {
       this.pose = 1;
@@ -213,13 +223,9 @@ Sprite.prototype.persegue = function(alvo) {
 };
 
 Sprite.prototype.colidiuCom = function(alvo){
-  try{
   if(this.y+(this.SIZE/2) < alvo.y-(alvo.SIZE/2)) return false;
   if(this.y-(this.SIZE/2) > alvo.y+(alvo.SIZE/2)) return false;
   if(this.x+(this.SIZE/2) < alvo.x-(alvo.SIZE/2)) return false;
   if(this.x-(this.SIZE/2) > alvo.x+(alvo.SIZE/2)) return false;
-  }catch(e){
-    console.log(this,alvo)
-  }
   return true;
 }
