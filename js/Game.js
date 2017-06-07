@@ -15,7 +15,7 @@ var inimigosMortos = 0;
 var score = 0;
 var scoreTotal = 0;
 var mudaLevel = false;
-var auxiliar = 0; //Se 0 está no inicio do jogo, se 1 está pausado, se 2 passou de nível, se 3 está em jogo, se 4 perdeu uma vida, se 5 perdeu uma vida por tempo
+var auxiliar = 0; //Se 0 está no inicio do jogo, se 1 está pausado, se 2 passou de nível, se 3 está em jogo, se 4 perdeu uma vida, se 5 perdeu uma vida por tempo, se 6 game over, se 7 venceu
 
 function init() {
   tela = document.getElementsByTagName('canvas')[0];
@@ -83,6 +83,14 @@ function passo(t) {
       soundLib.play("time");
       tempoTime = 1.0;
     }
+  }
+  if (vidas == 0){
+    auxiliar = 6;
+    cancelAnimationFrame(id);
+  }
+  if (level == 11){
+    auxiliar = 7;
+    cancelAnimationFrame(id);
   }
   telas();
   informacoes(ctx);
@@ -169,12 +177,22 @@ function configuraControles() {
           ]);
           mapa.loadMap(casasMapa);
           auxiliar = 3;
+          antes = new Date();
           requestAnimationFrame(passo);
         }
         if (auxiliar == 2 || auxiliar == 4 || auxiliar == 5){
           antes = new Date();
           requestAnimationFrame(passo);
           auxiliar = 3;
+        }
+        if (auxiliar == 6 || auxiliar == 7){
+          level = 1;
+          vidas = 3;
+          score = 0;
+          scoreTotal = 0;
+          mudaLevel = true;
+          auxiliar = 0;
+          requestAnimationFrame(passo);
         }
         break;
       case 80:
@@ -263,12 +281,15 @@ function telas(){
     ctx.fillStyle = "black";
     ctx.fillRect (0, 0, 480, 400);
     var texto1 = "BEM VINDO";
-    var texto5 = "As teclas direcionais movimentam o personagem"
-    var texto6 = "A tecla de espaço faz o personagem atacar"
-    var texto7 = "A tecla P pausa o jogo"
-    var texto8 = "Ao matar todos inimigos uma passagem se abrirá ao próximo nível"
-    var texto2 = "Tecle enter para iniciar"
-    textoFormatado(texto1, texto2, "", "", texto5, texto6, texto7, texto8);
+    var texto5 = "# As teclas direcionais movimentam o personagem";
+    var texto6 = "# A tecla de espaço faz o personagem atacar";
+    var texto7 = "# A tecla P pausa o jogo";
+    var texto8 = "# Ao matar todos inimigos uma passagem se abrirá ao próximo nível";
+    var texto9 = "# A cada inimigo morto são somados 10 pontos no score"
+    var texto10 = "# Quando muda de level o tempo restante é somado ao score"
+    var texto2 = "Tecle enter para iniciar";
+    var texto4 = "Instruções:"
+    textoFormatado(texto1, texto2, "", texto4, texto5, texto6, texto7, texto8, texto9, texto10);
     informacoes(ctx);
   }
   if (auxiliar == 1){
@@ -276,7 +297,7 @@ function telas(){
     ctx.fillRect (0, 0, 480, 400);
     var texto1 = "PAUSA";
     var texto2 = "Aperte a tecla P para voltar ao jogo";
-    textoFormatado(texto1 ,texto2, "", "", "", "", "", "");
+    textoFormatado(texto1 ,texto2, "", "", "", "", "", "", "", "");
     informacoes(ctx);
   }
   if (auxiliar == 3){
@@ -288,7 +309,7 @@ function telas(){
     var texto1 = "PARABÉNS";
     var texto2 = "Você passou de nível";
     var texto3 = "Tecle enter para iniciar o level";
-    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "");
+    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
     soundLib.play("Ta-Da");
     informacoes(ctx);
   }
@@ -298,7 +319,7 @@ function telas(){
     var texto1 = "PERDEU";
     var texto2 = "Você apanhou tanto que perdeu uma vida";
     var texto3 = "Tecle enter para voltar ao jogo";
-    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "");
+    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
     soundLib.play("dying");
     informacoes(ctx);
   }
@@ -308,29 +329,33 @@ function telas(){
     var texto1 = "PERDEU";
     var texto2 = "Seu tempo acabou";
     var texto3 = "Tecle enter para voltar ao jogo";
-    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "");
+    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
     soundLib.play("dying");
     informacoes(ctx);
   }
-  if (vidas == 0){
+  if (auxiliar == 6){
     ctx.fillStyle = "black";
     ctx.fillRect (0, 0, 480, 400);
     var texto1 = "GAME OVER";
     var texto2 = "Você perdeu todas as vidas"
-    textoFormatado(texto1 ,texto2, "", "", "", "", "", "");
+    var texto3 = "Tecle enter para reiniciar o jogo"
+    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
     soundLib.play("game-over");
     informacoes(ctx);
-  } else if (level > 10){
+  }
+  if (auxiliar == 7){
     ctx.fillStyle = "black";
     ctx.fillRect (0, 0, 480, 400);
-    var texto1 = "PARÁBENS";
+    var texto1 = "PARABÉNS";
     var texto2 = "Você passou por todos os níveis"
-    textoFormatado(texto1 ,texto2, "", "", "", "", "", "");
+    var texto3 = "Tecle enter para reiniciar o jogo"
+    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
+    soundLib.play("aplause");
     informacoes(ctx);
   }
 }
 
-function textoFormatado(texto1, texto2, texto3, texto4, texto5, texto6, texto7, texto8){
+function textoFormatado(texto1, texto2, texto3, texto4, texto5, texto6, texto7, texto8, texto9, texto10){
   ctx.textAlign="center";
   ctx.fillStyle = "red";
   ctx.font = "3em Arial Black";
@@ -342,8 +367,10 @@ function textoFormatado(texto1, texto2, texto3, texto4, texto5, texto6, texto7, 
   ctx.fillText(texto4, tela.width / 2, tela.height / 2 + 40);
   ctx.fillStyle = "white";
   ctx.font = "0.75em Arial Black";
-  ctx.fillText(texto5, tela.width / 2, tela.height / 2 + 85);
-  ctx.fillText(texto6, tela.width / 2, tela.height / 2 + 100);
-  ctx.fillText(texto7, tela.width / 2, tela.height / 2 + 115);
-  ctx.fillText(texto8, tela.width / 2, tela.height / 2 + 130);
+  ctx.fillText(texto5, tela.width / 2, tela.height / 2 + 55);
+  ctx.fillText(texto6, tela.width / 2, tela.height / 2 + 70);
+  ctx.fillText(texto7, tela.width / 2, tela.height / 2 + 85);
+  ctx.fillText(texto8, tela.width / 2, tela.height / 2 + 100);
+  ctx.fillText(texto9, tela.width / 2, tela.height / 2 + 115);
+  ctx.fillText(texto10, tela.width / 2, tela.height / 2 + 130);
 }

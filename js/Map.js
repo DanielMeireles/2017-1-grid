@@ -363,6 +363,7 @@ Map.prototype.alteraLevel = function(map, ctx){
   }
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3){
     level = level + 1;
+    scoreTotal = scoreTotal + Math.floor(tempoRestante);
     auxiliar = 2;
     telas();
   }
