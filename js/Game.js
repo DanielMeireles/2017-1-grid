@@ -34,6 +34,13 @@ function init() {
     [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 9, 1],
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
   ]);
+  soundLib = new SoundLoader();
+  soundLib.load("aplause", "mp3/aplause.mp3");
+  soundLib.load("dying", "mp3/dying.mp3");
+  soundLib.load("explosion", "mp3/explosion.mp3");
+  soundLib.load("game-over", "mp3/game-over.mp3");
+  soundLib.load("punch-off", "mp3/punch-off.mp3");
+  soundLib.load("punch-on", "mp3/punch-on.mp3");
   imglib = new ImageLoader();
   imglib.load("pc", "img/pc.png");
   imglib.load("piso", "img/floor.png");
@@ -220,6 +227,7 @@ function telas(){
     var texto1 = "GAME OVER";
     var texto2 = "VOCÊ PERDEU TODAS AS VIDAS"
     textoFormatado(texto1 ,texto2, "", "");
+    soundLib.play("game-over");
   } else if (level > 10){
     ctx.fillStyle = "black";
     ctx.fillRect (0, 0, 480, 400);

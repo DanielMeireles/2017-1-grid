@@ -20,10 +20,12 @@ Map.prototype.desenhar = function(ctx){
   }else{
     vidas = vidas - 1;
     mudaLevel = true;
+    soundLib.play("dying");
   }
   if (energia <= 0){
     mudaLevel = true;
     vidas = vidas - 1;
+    soundLib.play("dying");
   }
 }
 
@@ -204,6 +206,7 @@ Map.prototype.criaInimigo = function (l,c) {
   inimigo.y = (l+0.5)*this.SIZE;
   inimigo.energia = Math.floor(level/2.5);//Quantidade de golpes para matar cada inimigo
   inimigo.dir;
+  inimigo.tempoPunch = 0;
   this.enemies.push(inimigo);
 };
 
@@ -263,8 +266,14 @@ Map.prototype.desenharEspadas = function(ctx) {
 
 Map.prototype.testarColisao = function(alvo){
   for (var i = 0; i < this.enemies.length; i++) {
+    this.enemies[i].tempoPunch = this.enemies[i].tempoPunch - dt;
     if(alvo.colidiuCom(this.enemies[i])){
+      console.log(this.enemies[i].tempoPunch)
       energia = energia - dt*40;
+      if (this.enemies[i].tempoPunch <= 0){
+      soundLib.play("punch-on");
+      this.enemies[i].tempoPunch = 1;
+      }
       this.enemies[i].vx = 0;
       this.enemies[i].vy = 0;
       switch (this.enemies[i].pose) {
@@ -293,12 +302,16 @@ Map.prototype.testarColisaoEspadas = function(map){
         this.espadas[j].destroyed = true;
         this.delete();
         this.enemies[i].energia = this.enemies[i].energia - 1;
+        soundLib.play("punch-on");
         if (this.enemies[i].energia <= 0){
           this.enemies[i].destroyed = true;
           inimigosMortos = inimigosMortos + 1;
           score = score + 10;
+          soundLib.play("dying");
         }
         break;
+      } else{
+        soundLib.play("punch-off");
       }
     }
   }
@@ -343,6 +356,7 @@ Map.prototype.alteraLevel = function(map, ctx){
     416, 354
   );
   explosao.tempo = explosao.tempo + (dt*20);
+  soundLib.play("explosion");
   }
 
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3){
