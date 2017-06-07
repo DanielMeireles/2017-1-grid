@@ -41,6 +41,7 @@ function init() {
   soundLib.load("game-over", "mp3/game-over.mp3");
   soundLib.load("punch-off", "mp3/punch-off.mp3");
   soundLib.load("punch-on", "mp3/punch-on.mp3");
+  soundLib.load("time", "mp3/time.mp3");
   imglib = new ImageLoader();
   imglib.load("pc", "img/pc.png");
   imglib.load("piso", "img/floor.png");
@@ -88,6 +89,9 @@ function passo(t) {
   mapa.alteraLevel(mapa, ctx);
   tempo = tempo - dt;
   tempoRestante = tempoRestante - dt;
+  if (tempoRestante == 10){
+    soundLib.play("time");
+  }
   informacoes(ctx);
   antes = t;
 }

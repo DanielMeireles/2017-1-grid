@@ -271,8 +271,8 @@ Map.prototype.testarColisao = function(alvo){
       console.log(this.enemies[i].tempoPunch)
       energia = energia - dt*40;
       if (this.enemies[i].tempoPunch <= 0){
-      soundLib.play("punch-on");
-      this.enemies[i].tempoPunch = 1;
+        soundLib.play("punch-on");
+        this.enemies[i].tempoPunch = 1;
       }
       this.enemies[i].vx = 0;
       this.enemies[i].vy = 0;
@@ -356,9 +356,11 @@ Map.prototype.alteraLevel = function(map, ctx){
     416, 354
   );
   explosao.tempo = explosao.tempo + (dt*20);
-  soundLib.play("explosion");
+  console.log (explosao.tempo)
+  if (explosao.tempo <= 0.4){
+    soundLib.play("explosion");
   }
-
+  }
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3){
     level = level + 1;
   }
