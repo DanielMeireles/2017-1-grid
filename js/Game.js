@@ -7,18 +7,19 @@ var pc;
 var imglib;
 var tempo = 0;
 var tempoRestante = 60;
+var tempoTime = 0;
 var level = 1;
 var vidas = 3;
-var energia = 478;
+var energia = 476;
 var inimigosMortos = 0;
 var score = 0;
 var scoreTotal = 0;
 var mudaLevel = false;
-var auxiliar = 0; //Se 0 está no inicio do jogo, se 1 está pausado, se 2 passou de nível, se 3 está em jogo
+var auxiliar = 0; //Se 0 está no inicio do jogo, se 1 está pausado, se 2 passou de nível, se 3 está em jogo, se 4 perdeu uma vida, se 5 perdeu uma vida por tempo
 
 function init() {
   tela = document.getElementsByTagName('canvas')[0];
-  tela.width = 500;
+  tela.width = 480;
   tela.height = 480;
   ctx = tela.getContext('2d');
   soundLib = new SoundLoader();
@@ -64,8 +65,6 @@ function passo(t) {
   agora = new Date();
   dt = (agora - antes) / 1000;
   ctx.clearRect(0, 0, tela.width, tela.height);
-  telas();
-  informacoes(ctx);
   mapa.persegue(pc);
   mapa.testarColisao(pc);
   mapa.testarColisaoEspadas(mapa);
@@ -78,11 +77,19 @@ function passo(t) {
   if (auxiliar == 3){
     tempoRestante = tempoRestante - dt;
   }
-  if (tempoRestante < 10.10 && tempoRestante > 10.09){
-    soundLib.play("time");
+  if (Math.floor(tempoRestante) < 10){
+    tempoTime = tempoTime - dt;
+    if (tempoTime <= 0){
+      soundLib.play("time");
+      tempoTime = 1.0;
+    }
   }
+  telas();
   informacoes(ctx);
   antes = agora;
+  if (auxiliar == 0 || auxiliar == 1 || auxiliar == 2 || auxiliar == 4 || auxiliar == 5){
+    cancelAnimationFrame(id);
+  }
 }
 
 
@@ -164,8 +171,7 @@ function configuraControles() {
           auxiliar = 3;
           requestAnimationFrame(passo);
         }
-        if (auxiliar == 2){
-          ctx.globalAlpha = 1;
+        if (auxiliar == 2 || auxiliar == 4 || auxiliar == 5){
           antes = new Date();
           requestAnimationFrame(passo);
           auxiliar = 3;
@@ -173,13 +179,9 @@ function configuraControles() {
         break;
       case 80:
         if (auxiliar == 3){
-          ctx.globalAlpha = 0.8;
-          cancelAnimationFrame(id);
           auxiliar = 1;
           telas();
-          informacoes(ctx);
         } else if (auxiliar == 1){
-          ctx.globalAlpha = 1;
           antes = new Date();
           requestAnimationFrame(passo);
           auxiliar = 3;
@@ -258,52 +260,90 @@ function informacoes(ctx){
 }
 function telas(){
   if (auxiliar == 0){
-    cancelAnimationFrame(id);
     ctx.fillStyle = "black";
     ctx.fillRect (0, 0, 480, 400);
     var texto1 = "BEM VINDO";
-    textoFormatado(texto1 ,"", "", "");
+    var texto5 = "As teclas direcionais movimentam o personagem"
+    var texto6 = "A tecla de espaço faz o personagem atacar"
+    var texto7 = "A tecla P pausa o jogo"
+    var texto8 = "Ao matar todos inimigos uma passagem se abrirá ao próximo nível"
+    var texto2 = "Tecle enter para iniciar"
+    textoFormatado(texto1, texto2, "", "", texto5, texto6, texto7, texto8);
+    informacoes(ctx);
   }
   if (auxiliar == 1){
     ctx.fillStyle = "black";
     ctx.fillRect (0, 0, 480, 400);
     var texto1 = "PAUSA";
-    textoFormatado(texto1 ,"", "", "");
+    var texto2 = "Aperte a tecla P para voltar ao jogo";
+    textoFormatado(texto1 ,texto2, "", "", "", "", "", "");
+    informacoes(ctx);
+  }
+  if (auxiliar == 3){
+    informacoes(ctx);
   }
   if (auxiliar == 2 && level < 11){
-    ctx.globalAlpha = 0.8;
-    cancelAnimationFrame(id);
     ctx.fillStyle = "black";
     ctx.fillRect (0, 0, 480, 400);
     var texto1 = "PARABÉNS";
-    var texto2 = "VOCÊ PASSOU DE NÍVEL";
-    textoFormatado(texto1 ,texto2, "", "");
+    var texto2 = "Você passou de nível";
+    var texto3 = "Tecle enter para iniciar o level";
+    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "");
     soundLib.play("Ta-Da");
+    informacoes(ctx);
+  }
+  if (auxiliar == 4){
+    ctx.fillStyle = "black";
+    ctx.fillRect (0, 0, 480, 400);
+    var texto1 = "PERDEU";
+    var texto2 = "Você apanhou tanto que perdeu uma vida";
+    var texto3 = "Tecle enter para voltar ao jogo";
+    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "");
+    soundLib.play("dying");
+    informacoes(ctx);
+  }
+  if (auxiliar == 5){
+    ctx.fillStyle = "black";
+    ctx.fillRect (0, 0, 480, 400);
+    var texto1 = "PERDEU";
+    var texto2 = "Seu tempo acabou";
+    var texto3 = "Tecle enter para voltar ao jogo";
+    textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "");
+    soundLib.play("dying");
+    informacoes(ctx);
   }
   if (vidas == 0){
     ctx.fillStyle = "black";
     ctx.fillRect (0, 0, 480, 400);
     var texto1 = "GAME OVER";
-    var texto2 = "VOCÊ PERDEU TODAS AS VIDAS"
-    textoFormatado(texto1 ,texto2, "", "");
+    var texto2 = "Você perdeu todas as vidas"
+    textoFormatado(texto1 ,texto2, "", "", "", "", "", "");
     soundLib.play("game-over");
+    informacoes(ctx);
   } else if (level > 10){
     ctx.fillStyle = "black";
     ctx.fillRect (0, 0, 480, 400);
     var texto1 = "PARÁBENS";
-    var texto2 = "VOCÊ PASSOU POR TODOS OS NÍVEIS"
-    textoFormatado(texto1 ,texto2, "", "");
+    var texto2 = "Você passou por todos os níveis"
+    textoFormatado(texto1 ,texto2, "", "", "", "", "", "");
+    informacoes(ctx);
   }
 }
 
-function textoFormatado(texto1, texto2, texto3, texto4){
+function textoFormatado(texto1, texto2, texto3, texto4, texto5, texto6, texto7, texto8){
   ctx.textAlign="center";
   ctx.fillStyle = "red";
   ctx.font = "3em Arial Black";
-  ctx.fillText(texto1, tela.width / 2, tela.height / 2);
+  ctx.fillText(texto1, tela.width / 2, tela.height / 2-20);
   ctx.fillStyle = "white";
   ctx.font = "1em Arial Black";
-  ctx.fillText(texto2, tela.width / 2, tela.height / 2 + 20);
-  ctx.fillText(texto3, tela.width / 2, tela.height / 2 + 40);
-  ctx.fillText(texto4, tela.width / 2, tela.height / 2 + 60);
+  ctx.fillText(texto2, tela.width / 2, tela.height / 2);
+  ctx.fillText(texto3, tela.width / 2, tela.height / 2 + 20);
+  ctx.fillText(texto4, tela.width / 2, tela.height / 2 + 40);
+  ctx.fillStyle = "white";
+  ctx.font = "0.75em Arial Black";
+  ctx.fillText(texto5, tela.width / 2, tela.height / 2 + 85);
+  ctx.fillText(texto6, tela.width / 2, tela.height / 2 + 100);
+  ctx.fillText(texto7, tela.width / 2, tela.height / 2 + 115);
+  ctx.fillText(texto8, tela.width / 2, tela.height / 2 + 130);
 }

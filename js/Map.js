@@ -20,12 +20,14 @@ Map.prototype.desenhar = function(ctx){
   }else{
     vidas = vidas - 1;
     mudaLevel = true;
-    soundLib.play("dying");
+    auxiliar = 5;
+    telas();
   }
   if (energia <= 0){
     mudaLevel = true;
     vidas = vidas - 1;
-    soundLib.play("dying");
+    auxiliar = 4;
+    telas();
   }
 }
 
@@ -268,8 +270,8 @@ Map.prototype.testarColisao = function(alvo){
   for (var i = 0; i < this.enemies.length; i++) {
     this.enemies[i].tempoPunch = this.enemies[i].tempoPunch - dt;
     if(alvo.colidiuCom(this.enemies[i])){
-      energia = energia - dt*40;
       if (this.enemies[i].tempoPunch <= 0){
+        energia = energia - dt*300 * level;
         soundLib.play("punch-on");
         this.enemies[i].tempoPunch = 1;
       }
@@ -363,7 +365,6 @@ Map.prototype.alteraLevel = function(map, ctx){
     level = level + 1;
     auxiliar = 2;
     telas();
-    informacoes(ctx);
   }
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3 || mudaLevel == true){
     if (level % 4 == 1){

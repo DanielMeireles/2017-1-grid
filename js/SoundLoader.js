@@ -1,7 +1,7 @@
 function SoundLoader() {
   this.sons = {};
   this.canais = [];
-  this.MAX = 10;
+  this.MAX = 20;
 
   for (var i = 0; i < this.MAX; i++) {
     this.canais[i] = {
