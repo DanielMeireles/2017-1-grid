@@ -73,7 +73,6 @@ function passo(t) {
   pc.moverOnMap(mapa, dt);
   mapa.moverInimigosOnMap(mapa, dt);
   mapa.desenhar(ctx);
-  pc.desenhar(ctx);
   mapa.alteraLevel(mapa, ctx);
   tempo = tempo - dt;
   if (auxiliar == 3){

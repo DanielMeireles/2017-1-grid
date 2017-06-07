@@ -215,7 +215,15 @@ Map.prototype.criaInimigo = function (l,c) {
 
 Map.prototype.desenharInimigos = function(ctx) {
   for (var i = 0; i < this.enemies.length; i++) {
-    this.enemies[i].desenhar(ctx);
+    if (this.enemies[i].y < pc.y){
+      this.enemies[i].desenhar(ctx);
+    }
+  }
+  pc.desenhar(ctx);
+  for (var i = 0; i < this.enemies.length; i++) {
+    if (this.enemies[i].y > pc.y){
+      this.enemies[i].desenhar(ctx);
+    }
   }
 }
 
