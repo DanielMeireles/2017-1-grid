@@ -89,7 +89,8 @@ function passo(t) {
   mapa.alteraLevel(mapa, ctx);
   tempo = tempo - dt;
   tempoRestante = tempoRestante - dt;
-  if (tempoRestante == 10){
+  console.log (tempoRestante)
+  if (tempoRestante < 10.10 && tempoRestante > 10.09){
     soundLib.play("time");
   }
   informacoes(ctx);
@@ -152,6 +153,9 @@ function configuraControles() {
         }
         mapa.espada(pc.x, pc.y);
         tempo = 0.35;
+        if (inimigosMortos == 8){
+          soundLib.play("punch-off");
+        }
         break;
       default:
     }

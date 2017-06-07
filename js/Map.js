@@ -311,7 +311,9 @@ Map.prototype.testarColisaoEspadas = function(map){
         }
         break;
       } else{
-        soundLib.play("punch-off");
+        if (tempo == 0.35){
+          soundLib.play("punch-off");
+        }
       }
     }
   }
