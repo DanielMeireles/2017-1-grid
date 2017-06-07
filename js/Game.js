@@ -31,6 +31,8 @@ function init() {
   soundLib.load("punch-on", "mp3/punch-on.mp3");
   soundLib.load("time", "mp3/time.mp3");
   soundLib.load("Ta-Da", "mp3/Ta-Da.mp3");
+  soundLib.load("pc-dying", "mp3/pc-dying.mp3");
+  soundLib.load("alarm", "mp3/alarm.mp3");
   imglib = new ImageLoader();
   imglib.load("pc", "img/pc.png");
   imglib.load("piso", "img/floor.png");
@@ -320,7 +322,7 @@ function telas(){
     var texto2 = "Você apanhou tanto que perdeu uma vida";
     var texto3 = "Tecle enter para voltar ao jogo";
     textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
-    soundLib.play("dying");
+    soundLib.play("pc-dying");
     informacoes(ctx);
   }
   if (auxiliar == 5){
@@ -330,7 +332,7 @@ function telas(){
     var texto2 = "Seu tempo acabou";
     var texto3 = "Tecle enter para voltar ao jogo";
     textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
-    soundLib.play("dying");
+    soundLib.play("alarm");
     informacoes(ctx);
   }
   if (auxiliar == 6){
@@ -340,6 +342,7 @@ function telas(){
     var texto2 = "Você perdeu todas as vidas"
     var texto3 = "Tecle enter para reiniciar o jogo"
     textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
+    soundLib.play("pc-dying");
     soundLib.play("game-over");
     informacoes(ctx);
   }
