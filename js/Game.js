@@ -14,26 +14,13 @@ var inimigosMortos = 0;
 var score = 0;
 var scoreTotal = 0;
 var mudaLevel = false;
+var auxiliar = 0; //Se 0 está no inicio do jogo, se 1 está pausado, se 2 passou de nível, se 3 está em jogo
 
 function init() {
   tela = document.getElementsByTagName('canvas')[0];
   tela.width = 500;
   tela.height = 480;
   ctx = tela.getContext('2d');
-  casasMapa = ([
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
-    [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 9, 0, 1],
-    [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1],
-    [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 9, 1],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
-  ]);
   soundLib = new SoundLoader();
   soundLib.load("aplause", "mp3/aplause.mp3");
   soundLib.load("dying", "mp3/dying.mp3");
@@ -42,6 +29,7 @@ function init() {
   soundLib.load("punch-off", "mp3/punch-off.mp3");
   soundLib.load("punch-on", "mp3/punch-on.mp3");
   soundLib.load("time", "mp3/time.mp3");
+  soundLib.load("Ta-Da", "mp3/Ta-Da.mp3");
   imglib = new ImageLoader();
   imglib.load("pc", "img/pc.png");
   imglib.load("piso", "img/floor.png");
@@ -58,7 +46,6 @@ function init() {
   imglib.load("inimigo10", "img/enemies10.png")
   mapa = new Map(12, 15);
   mapa.imageLib = imglib;
-  mapa.loadMap(casasMapa);
   pc = new Sprite();
   pc.imageLib = imglib;
   pc.x = 50;
@@ -67,18 +54,18 @@ function init() {
   explosao = new Sprite();
   explosao.tempo = 0;
   configuraControles();
+  var id = requestAnimationFrame(passo);
 
-  requestAnimationFrame(passo);
+  //requestAnimationFrame(passo);
 }
 
 function passo(t) {
-  dt = (t - antes) / 1000;
+  id = requestAnimationFrame(passo);
+  agora = new Date();
+  dt = (agora - antes) / 1000;
   ctx.clearRect(0, 0, tela.width, tela.height);
-  requestAnimationFrame(passo);
-  if (vidas == 0 || level > 10){
-    telas();
-    informacoes(ctx);
-  }else{
+  telas();
+  informacoes(ctx);
   mapa.persegue(pc);
   mapa.testarColisao(pc);
   mapa.testarColisaoEspadas(mapa);
@@ -88,14 +75,14 @@ function passo(t) {
   pc.desenhar(ctx);
   mapa.alteraLevel(mapa, ctx);
   tempo = tempo - dt;
-  tempoRestante = tempoRestante - dt;
-  console.log (tempoRestante)
+  if (auxiliar == 3){
+    tempoRestante = tempoRestante - dt;
+  }
   if (tempoRestante < 10.10 && tempoRestante > 10.09){
     soundLib.play("time");
   }
   informacoes(ctx);
-  antes = t;
-}
+  antes = agora;
 }
 
 
@@ -155,6 +142,47 @@ function configuraControles() {
         tempo = 0.35;
         if (inimigosMortos == 8){
           soundLib.play("punch-off");
+        }
+        break;
+      case 13:
+        if (auxiliar == 0){
+          casasMapa = ([
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
+            [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1],
+            [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+            [1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 9, 0, 1],
+            [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1],
+            [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 9, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
+          ]);
+          mapa.loadMap(casasMapa);
+          auxiliar = 3;
+          requestAnimationFrame(passo);
+        }
+        if (auxiliar == 2){
+          ctx.globalAlpha = 1;
+          antes = new Date();
+          requestAnimationFrame(passo);
+          auxiliar = 3;
+        }
+        break;
+      case 80:
+        if (auxiliar == 3){
+          ctx.globalAlpha = 0.8;
+          cancelAnimationFrame(id);
+          auxiliar = 1;
+          telas();
+          informacoes(ctx);
+        } else if (auxiliar == 1){
+          ctx.globalAlpha = 1;
+          antes = new Date();
+          requestAnimationFrame(passo);
+          auxiliar = 3;
         }
         break;
       default:
@@ -229,6 +257,29 @@ function informacoes(ctx){
   ctx.fillText("Tempo Restante: "+ tempoRestante.toFixed(), 476, 425);
 }
 function telas(){
+  if (auxiliar == 0){
+    cancelAnimationFrame(id);
+    ctx.fillStyle = "black";
+    ctx.fillRect (0, 0, 480, 400);
+    var texto1 = "BEM VINDO";
+    textoFormatado(texto1 ,"", "", "");
+  }
+  if (auxiliar == 1){
+    ctx.fillStyle = "black";
+    ctx.fillRect (0, 0, 480, 400);
+    var texto1 = "PAUSA";
+    textoFormatado(texto1 ,"", "", "");
+  }
+  if (auxiliar == 2 && level < 11){
+    ctx.globalAlpha = 0.8;
+    cancelAnimationFrame(id);
+    ctx.fillStyle = "black";
+    ctx.fillRect (0, 0, 480, 400);
+    var texto1 = "PARABÉNS";
+    var texto2 = "VOCÊ PASSOU DE NÍVEL";
+    textoFormatado(texto1 ,texto2, "", "");
+    soundLib.play("Ta-Da");
+  }
   if (vidas == 0){
     ctx.fillStyle = "black";
     ctx.fillRect (0, 0, 480, 400);

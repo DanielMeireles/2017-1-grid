@@ -268,7 +268,6 @@ Map.prototype.testarColisao = function(alvo){
   for (var i = 0; i < this.enemies.length; i++) {
     this.enemies[i].tempoPunch = this.enemies[i].tempoPunch - dt;
     if(alvo.colidiuCom(this.enemies[i])){
-      console.log(this.enemies[i].tempoPunch)
       energia = energia - dt*40;
       if (this.enemies[i].tempoPunch <= 0){
         soundLib.play("punch-on");
@@ -343,6 +342,7 @@ Map.prototype.alteraLevel = function(map, ctx){
     for (var j = 0; j < this.cells[i].length; j++) {
       if (inimigosMortos > 7 && this.cells[i][j] == 2){
         this.cells[i][j] = 3;
+        soundLib.play("explosion");
       }
     }
   }
@@ -358,13 +358,12 @@ Map.prototype.alteraLevel = function(map, ctx){
     416, 354
   );
   explosao.tempo = explosao.tempo + (dt*20);
-  console.log (explosao.tempo)
-  if (explosao.tempo <= 0.4){
-    soundLib.play("explosion");
-  }
   }
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3){
     level = level + 1;
+    auxiliar = 2;
+    telas();
+    informacoes(ctx);
   }
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3 || mudaLevel == true){
     if (level % 4 == 1){
