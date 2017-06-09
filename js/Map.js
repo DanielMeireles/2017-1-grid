@@ -298,7 +298,7 @@ Map.prototype.testarColisao = function(alvo){
       //Gera os inimigos dando socos
       this.enemies[i].vx = 0;
       this.enemies[i].vy = 0;
-      this.repelir(this.enemies[i], pc);
+      this.repelir(this.enemies[i], pc, 10);
       switch (this.enemies[i].pose) {
         case 3:
           this.enemies[i].pose = 8;
@@ -351,7 +351,7 @@ Map.prototype.testarColisaoEspadas = function(map){
 Map.prototype.delete = function(){
   for (var i = 0; i < this.enemies.length; i++) {
     for (var j = i+1; j < this.enemies.length; j++) {
-      this.repelir(this.enemies[i], this.enemies[j]);
+      this.repelir(this.enemies[i], this.enemies[j], 20);
     }
 }
   for (var j = this.espadas.length-1; j>=0; j--) {
@@ -476,14 +476,14 @@ Map.prototype.explosao = function(map, ctx){
   }
 }
 
-Map.prototype.repelir = function(primeiro, segundo){
+Map.prototype.repelir = function(primeiro, segundo, distRaio){
   var dx = primeiro.x-segundo.x;
   var dy = primeiro.y-segundo.y;
   var raio = Math.sqrt(
     Math.pow(dx,2)+
     Math.pow(dy,2)
   );
-  if(raio>10) return;
+  if(raio>distRaio) return;
   primeiro.vx += 120*dx/(raio*raio);
   primeiro.vy += 120*dy/(raio*raio);
 }
