@@ -206,6 +206,8 @@ Map.prototype.criaInimigo = function (l,c) {
   inimigo.energia = Math.floor(level/2.5);//Quantidade de golpes para matar cada inimigo
   inimigo.dir;
   inimigo.tempoPunch = 0;
+  inimigo.ax = 0;
+  inimigo.ay = 0;
   this.enemies.push(inimigo);
 };
 
@@ -479,11 +481,15 @@ Map.prototype.explosao = function(map, ctx){
 Map.prototype.repelir = function(primeiro, segundo, distRaio){
   var dx = primeiro.x-segundo.x;
   var dy = primeiro.y-segundo.y;
+  if (dx ==0 && dy == 0){
+    dx=1;
+    dy=1;
+  }
   var raio = Math.sqrt(
     Math.pow(dx,2)+
     Math.pow(dy,2)
   );
-  if(raio>distRaio) return;
-  primeiro.vx += 120*dx/(raio*raio);
-  primeiro.vy += 120*dy/(raio*raio);
+  if(raio>20) return;
+  primeiro.ax += 50*dx/(raio*raio);
+  primeiro.ay += 50*dy/(raio*raio);
 }

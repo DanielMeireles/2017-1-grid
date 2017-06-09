@@ -160,6 +160,14 @@ Sprite.prototype.mover = function(dt) {
 };
 
 Sprite.prototype.moverOnMap = function(map, dt) {
+  if (Math.abs(this.ax) > 0){
+    this.vx = this.ax;
+    this.ax = 0;
+  }
+  if (Math.abs(this.ay) > 0){
+    this.vy = this.ay;
+    this.ay = 0;
+  }
   this.frame += this.poses[this.pose].time * dt;
   if (this.frame > this.poses[this.pose].colMax + 1) {
     this.frame = this.poses[this.pose].col;
