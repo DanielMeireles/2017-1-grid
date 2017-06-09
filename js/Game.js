@@ -58,8 +58,6 @@ function init() {
   explosao.tempo = 0;
   configuraControles();
   var id = requestAnimationFrame(passo);
-
-  //requestAnimationFrame(passo);
 }
 
 function passo(t) {
@@ -143,21 +141,23 @@ function configuraControles() {
         e.preventDefault();
         break;
       case 32:
-        pc.vx = 0;
-        pc.vy = 0;
-        if (pc.pose == 0 || pc.pose == 4){
-          pc.pose = 8;
-        } else if (pc.pose == 2 || pc.pose == 6){
-          pc.pose = 9;
-        } else if (pc.pose == 1 || pc.pose == 5){
-          pc.pose = 11;
-        } else if (pc.pose == 3 || pc.pose == 7){
-          pc.pose = 10;
-        }
-        mapa.espada(pc.x, pc.y);
-        tempo = 0.35;
-        if (inimigosMortos == 8){
-          soundLib.play("punch-off");
+        if (auxiliar == 3){
+          pc.vx = 0;
+          pc.vy = 0;
+          if (pc.pose == 0 || pc.pose == 4){
+            pc.pose = 8;
+          } else if (pc.pose == 2 || pc.pose == 6){
+            pc.pose = 9;
+          } else if (pc.pose == 1 || pc.pose == 5){
+            pc.pose = 11;
+          } else if (pc.pose == 3 || pc.pose == 7){
+            pc.pose = 10;
+          }
+          mapa.espada(pc.x, pc.y);
+          tempo = 0.35;
+          if (inimigosMortos == 8){
+            soundLib.play("punch-off");
+          }
         }
         break;
       case 13:
