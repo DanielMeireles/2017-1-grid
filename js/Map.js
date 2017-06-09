@@ -348,6 +348,11 @@ Map.prototype.testarColisaoEspadas = function(map){
 }
 
 Map.prototype.delete = function(){
+  for (var i = 0; i < this.enemies.length; i++) {
+  for (var j = i+1; j < this.enemies.length; j++) {
+    this.repelir(this.enemies[i], this.enemies[j]);
+  }
+}
   for (var j = this.espadas.length-1; j>=0; j--) {
     if (this.espadas[j].destroyed == true){
       this.espadas.splice(j,1);
@@ -468,4 +473,16 @@ Map.prototype.explosao = function(map, ctx){
   }
   explosao.tempo = explosao.tempo + (dt*20);
   }
+}
+
+Map.prototype.repelir = function(primeiro, segundo){
+  var dx = primeiro.x-segundo.x;
+  var dy = primeiro.y-segundo.y;
+  var raio = Math.sqrt(
+    Math.pow(dx,2)+
+    Math.pow(dy,2)
+  );
+  if(raio>12) return;
+  primeiro.vx += 120*dx/(raio*raio);
+  primeiro.vy += 120*dy/(raio*raio);
 }
