@@ -4,7 +4,6 @@ function Map(l, c) {
   this.enemies = [];
   this.espadas = [];
   this.imageLib = null;
-
   for (var i = 0; i < l; i++) {
     this.cells[i] = [];
     for (var j = 0; j < c; j++) {
@@ -21,13 +20,11 @@ Map.prototype.desenhar = function(ctx){
     vidas = vidas - 1;
     mudaLevel = true;
     auxiliar = 5;
-    telas();
   }
-  if (energia <= 0){
+  if (pc.energia <= 0){
     mudaLevel = true;
     vidas = vidas - 1;
     auxiliar = 4;
-    telas();
   }
 }
 
@@ -35,7 +32,7 @@ Map.prototype.desenharLimites = function(ctx) {
   for (var i = 0; i < this.cells.length; i++) {
     var linha = this.cells[i];
     for (var j = 0; j < linha.length; j++) {
-      /*switch (this.cells[i][j]) {
+      switch (this.cells[i][j]) {
         case 0:
           break;
         case 1:
@@ -49,7 +46,7 @@ Map.prototype.desenharLimites = function(ctx) {
         default:
           ctx.fillStyle = 'red';
           ctx.fillRect(j * this.SIZE, i * this.SIZE, this.SIZE, this.SIZE);
-      }*/
+      }
     }
   }
   this.desenharInimigos(ctx);
@@ -106,7 +103,7 @@ Map.prototype.getIndices = function (sprite) {
 Map.prototype.criaInimigo = function (l,c) {
   var inimigo = new Sprite();
   inimigo.poses = [
-    //0 - Caminhada para a direita com espada na mão
+    //0 - Caminhada para a direita
     {
       key: "inimigo"+level,
       row: 11,
@@ -114,7 +111,7 @@ Map.prototype.criaInimigo = function (l,c) {
       colMax: 7,
       time: 8
     },
-    //1 - Caminhada para baixo com espada na mão
+    //1 - Caminhada para baixo
     {
       key: "inimigo"+level,
       row: 10,
@@ -122,7 +119,7 @@ Map.prototype.criaInimigo = function (l,c) {
       colMax: 7,
       time: 8
     },
-    //2 - Caminhada para a esquerda com espada na mão
+    //2 - Caminhada para a esquerda
     {
       key: "inimigo"+level,
       row: 9,
@@ -130,7 +127,7 @@ Map.prototype.criaInimigo = function (l,c) {
       colMax: 7,
       time: 8
     },
-    //3 - Caminhada para cima com espada na mão
+    //3 - Caminhada para cima
     {
       key: "inimigo"+level,
       row: 8,
@@ -138,7 +135,7 @@ Map.prototype.criaInimigo = function (l,c) {
       colMax: 7,
       time: 8
     },
-    //4 - Parado para a direita com espada na mão
+    //4 - Parado para a direita
     {
       key: "inimigo"+level,
       row: 11,
@@ -146,7 +143,7 @@ Map.prototype.criaInimigo = function (l,c) {
       colMax: 0,
       time: 8
     },
-    //5 - Parado para baixo com espada na mão
+    //5 - Parado para baixo
     {
       key: "inimigo"+level,
       row: 10,
@@ -154,7 +151,7 @@ Map.prototype.criaInimigo = function (l,c) {
       colMax: 0,
       time: 8
     },
-    //6 - Parado para a esquerda com espada na mão
+    //6 - Parado para a esquerda
     {
       key: "inimigo"+level,
       row: 9,
@@ -162,7 +159,7 @@ Map.prototype.criaInimigo = function (l,c) {
       colMax: 0,
       time: 8
     },
-    //7 - Parado para cima com espada na mão
+    //7 - Parado para cima
     {
       key: "inimigo"+level,
       row: 8,
@@ -245,30 +242,45 @@ Map.prototype.persegue = function(alvo) {
   }
 }
 
-Map.prototype.espada = function (x, y, dir) {
-    var espada = new Sprite();
-    if (pc.pose == 8){
-      espada.x = pc.x+20;
-      espada.y = pc.y;
-    } else if (pc.pose == 9){
-      espada.x = pc.x-20;
-      espada.y = pc.y;
-    } else if (pc.pose == 10){
-      espada.x = pc.x;
-      espada.y = pc.y-20;
-    } else if (pc.pose == 11){
-      espada.x = pc.x;
-      espada.y = pc.y+20;
-    }
-    espada.SIZE=20;
-    this.espadas.push(espada);
+Map.prototype.espada = function () {
+  pc.vx = 0;
+  pc.vy = 0;
+  if (pc.pose == 0 || pc.pose == 4){
+    pc.pose = 8;
+  } else if (pc.pose == 2 || pc.pose == 6){
+    pc.pose = 9;
+  } else if (pc.pose == 1 || pc.pose == 5){
+    pc.pose = 11;
+  } else if (pc.pose == 3 || pc.pose == 7){
+    pc.pose = 10;
+  }
+  pc.tempo = 0.35;
+  if (inimigosMortos == 8){
+    soundLib.play("punch-off");
+  }
+  var espada = new Sprite();
+  if (pc.pose == 8){
+    espada.x = pc.x+20;
+    espada.y = pc.y;
+  } else if (pc.pose == 9){
+    espada.x = pc.x-20;
+    espada.y = pc.y;
+  } else if (pc.pose == 10){
+    espada.x = pc.x;
+    espada.y = pc.y-20;
+  } else if (pc.pose == 11){
+    espada.x = pc.x;
+    espada.y = pc.y+20;
+  }
+  espada.SIZE=20;
+  this.espadas.push(espada);
 }
 
 Map.prototype.desenharEspadas = function(ctx) {
   for (var i = 0; i < this.espadas.length; i++) {
     //this.espadas[i].desenharLimites(ctx);
     this.espadas[i].destroyed = false;
-    if (tempo < 0){
+    if (pc.tempo < 0){
       this.espadas[i].destroyed = true
     }
   }
@@ -279,10 +291,11 @@ Map.prototype.testarColisao = function(alvo){
     this.enemies[i].tempoPunch = this.enemies[i].tempoPunch - dt;
     if(alvo.colidiuCom(this.enemies[i])){
       if (this.enemies[i].tempoPunch <= 0){
-        energia = energia - dt*300 * level;
+        pc.energia = pc.energia - dt*200 * Math.ceil(level/2);//Controla o tanto de energia que se perde com cada soco tomado
         soundLib.play("punch-on");
         this.enemies[i].tempoPunch = 1;
       }
+      //Gera os inimigos dando socos
       this.enemies[i].vx = 0;
       this.enemies[i].vy = 0;
       switch (this.enemies[i].pose) {
@@ -320,7 +333,7 @@ Map.prototype.testarColisaoEspadas = function(map){
         }
         break;
       } else{
-        if (tempo == 0.35){
+        if (pc.tempo == 0.35){
           soundLib.play("punch-off");
         }
       }
@@ -352,29 +365,17 @@ Map.prototype.alteraLevel = function(map, ctx){
     for (var j = 0; j < this.cells[i].length; j++) {
       if (inimigosMortos > 7 && this.cells[i][j] == 2){
         this.cells[i][j] = 3;
-        soundLib.play("explosion");
       }
     }
   }
-  if (this.cells[11][13] != 3){
-    explosao.tempo = 0;
-  }
-  if (this.cells[11][13] == 3 && explosao.tempo < 16){
-  this.imageLib.drawImageTile(ctx,
-    "explosao",
-    0,
-    Math.floor(explosao.tempo),
-    32,
-    416, 354
-  );
-  explosao.tempo = explosao.tempo + (dt*20);
-  }
+
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3){
     level = level + 1;
     scoreTotal = scoreTotal + Math.floor(tempoRestante);
     auxiliar = 2;
-    telas();
+    explosao.tempo = 0;
   }
+
   if (map.cells[Math.floor(pc.y/32)][Math.floor(pc.x/32)] == 3 || mudaLevel == true){
     if (level % 4 == 1){
       casasMapa=([
@@ -449,6 +450,22 @@ Map.prototype.alteraLevel = function(map, ctx){
     scoreTotal = scoreTotal + score;
     score = 0;
     mudaLevel = false;
-    energia = 476;
+    pc.energia = tela.width - 4;
+  }
+}
+
+Map.prototype.explosao = function(map, ctx){
+  if (this.cells[11][13] == 3 && explosao.tempo < 16){
+  this.imageLib.drawImageTile(ctx,
+    "explosao",
+    0,
+    Math.floor(explosao.tempo),
+    32,
+    416, 354
+  );
+  if (explosao.tempo == 0){
+    soundLib.play("explosion");
+  }
+  explosao.tempo = explosao.tempo + (dt*20);
   }
 }

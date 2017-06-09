@@ -5,18 +5,29 @@ var dt = 0;
 var mapa;
 var pc;
 var imglib;
-var tempo = 0;
 var tempoRestante = 60;
 var tempoTime = 0;
 var level = 1;
 var vidas = 3;
-var energia = 476;
 var inimigosMortos = 0;
 var score = 0;
 var scoreTotal = 0;
 var mudaLevel = false;
 var auxiliar = 0; //Se 0 está no inicio do jogo, se 1 está pausado, se 2 passou de nível, se 3 está em jogo, se 4 perdeu uma vida, se 5 perdeu uma vida por tempo, se 6 game over, se 7 venceu
-
+var casasMapa = ([
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+  [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
+  [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1],
+  [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+  [1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 9, 0, 1],
+  [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+  [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1],
+  [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 9, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
+]);
 function init() {
   tela = document.getElementsByTagName('canvas')[0];
   tela.width = 480;
@@ -49,17 +60,19 @@ function init() {
   imglib.load("inimigo10", "img/enemies10.png")
   mapa = new Map(12, 15);
   mapa.imageLib = imglib;
+  mapa.cronometro = 0;
   pc = new Sprite();
   pc.imageLib = imglib;
   pc.x = 50;
   pc.y = 50;
   pc.dir = 1;
+  pc.energia = tela.width - 4;
+  pc.tempo = 0;
   explosao = new Sprite();
   explosao.tempo = 0;
   configuraControles();
   var id = requestAnimationFrame(passo);
 }
-
 function passo(t) {
   id = requestAnimationFrame(passo);
   agora = new Date();
@@ -72,37 +85,15 @@ function passo(t) {
   mapa.moverInimigosOnMap(mapa, dt);
   mapa.desenhar(ctx);
   mapa.alteraLevel(mapa, ctx);
-  tempo = tempo - dt;
-  if (auxiliar == 3){
-    tempoRestante = tempoRestante - dt;
-  }
-  if (Math.floor(tempoRestante) < 10){
-    tempoTime = tempoTime - dt;
-    if (tempoTime <= 0){
-      soundLib.play("time");
-      tempoTime = 1.0;
-    }
-  }
-  if (vidas == 0){
-    auxiliar = 6;
-    cancelAnimationFrame(id);
-  }
-  if (level == 11){
-    auxiliar = 7;
-    cancelAnimationFrame(id);
-  }
+  mapa.explosao(mapa, ctx);
+  aux();
   telas();
   informacoes(ctx);
   antes = agora;
-  if (auxiliar == 0 || auxiliar == 1 || auxiliar == 2 || auxiliar == 4 || auxiliar == 5){
-    cancelAnimationFrame(id);
-  }
 }
-
-
 function configuraControles() {
   addEventListener("keydown", function(e) {
-    if (tempo <= 0){
+    if (pc.tempo <= 0){
     switch (e.keyCode) {
       case 37:
         pc.vx = -100;
@@ -112,6 +103,7 @@ function configuraControles() {
         break;
       case 38:
         pc.vy = -100;
+        //Correção para o PC não ficar deslizando nos movimentos
         if (pc.vx == 0){
           pc.pose = 3;
         }else if (pc.vx > 0){
@@ -130,6 +122,7 @@ function configuraControles() {
         break;
       case 40:
         pc.vy = +100;
+        //Correção para o PC não ficar deslizando nos movimentos
         if (pc.vx == 0){
           pc.pose = 1;
         }else if (pc.vx > 0){
@@ -142,46 +135,14 @@ function configuraControles() {
         break;
       case 32:
         if (auxiliar == 3){
-          pc.vx = 0;
-          pc.vy = 0;
-          if (pc.pose == 0 || pc.pose == 4){
-            pc.pose = 8;
-          } else if (pc.pose == 2 || pc.pose == 6){
-            pc.pose = 9;
-          } else if (pc.pose == 1 || pc.pose == 5){
-            pc.pose = 11;
-          } else if (pc.pose == 3 || pc.pose == 7){
-            pc.pose = 10;
-          }
-          mapa.espada(pc.x, pc.y);
-          tempo = 0.35;
-          if (inimigosMortos == 8){
-            soundLib.play("punch-off");
-          }
+          mapa.espada();
         }
         break;
       case 13:
         if (auxiliar == 0){
-          casasMapa = ([
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-            [1, 0, 0, 0, 1, 0, 0, 9, 1, 0, 0, 0, 0, 9, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1],
-            [1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
-            [1, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 9, 0, 1],
-            [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1],
-            [1, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 9, 1, 9, 1],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1]
-          ]);
           mapa.loadMap(casasMapa);
-          auxiliar = 3;
-          antes = new Date();
-          requestAnimationFrame(passo);
         }
-        if (auxiliar == 2 || auxiliar == 4 || auxiliar == 5){
+        if (auxiliar == 0 || auxiliar == 2 || auxiliar == 4 || auxiliar == 5){
           antes = new Date();
           requestAnimationFrame(passo);
           auxiliar = 3;
@@ -199,7 +160,6 @@ function configuraControles() {
       case 80:
         if (auxiliar == 3){
           auxiliar = 1;
-          telas();
         } else if (auxiliar == 1){
           antes = new Date();
           requestAnimationFrame(passo);
@@ -211,10 +171,11 @@ function configuraControles() {
 }
   });
   addEventListener("keyup", function(e) {
-    if (tempo <= 0){
+    if (pc.tempo <= 0){
     switch (e.keyCode) {
       case 37:
         pc.vx = 0;
+        //Correção para o PC não ficar deslizando nos movimentos
         if (pc.vy == 0){
           pc.pose = 6;
         }else if (pc.vy > 0){
@@ -226,6 +187,7 @@ function configuraControles() {
         break;
       case 39:
         pc.vx = 0;
+        //Correção para o PC não ficar deslizando nos movimentos
         if (pc.vy == 0){
           pc.pose = 4;
         }else if (pc.vy > 0){
@@ -254,14 +216,13 @@ function configuraControles() {
   }
   });
 }
-
 function informacoes(ctx){
   ctx.fillStyle = "black";
   ctx.fillRect (0, 384, 480, 90);
   ctx.fillStyle = "grey";
   ctx.fillRect (0, 388, 480, 19);
-  ctx.fillStyle = "hsl("+energia/476*120+",100%,50%)";
-  ctx.fillRect (2, 390, energia, 15);
+  ctx.fillStyle = "hsl("+pc.energia/476*120+",100%,50%)";
+  ctx.fillRect (2, 390, pc.energia, 15);
   ctx.textAlign="center";
   ctx.fillStyle = "black";
   ctx.font = "1em Arial Black";
@@ -291,7 +252,6 @@ function telas(){
     var texto2 = "Tecle enter para iniciar";
     var texto4 = "Instruções:"
     textoFormatado(texto1, texto2, "", texto4, texto5, texto6, texto7, texto8, texto9, texto10);
-    informacoes(ctx);
   }
   if (auxiliar == 1){
     ctx.fillStyle = "black";
@@ -299,10 +259,6 @@ function telas(){
     var texto1 = "PAUSA";
     var texto2 = "Aperte a tecla P para voltar ao jogo";
     textoFormatado(texto1 ,texto2, "", "", "", "", "", "", "", "");
-    informacoes(ctx);
-  }
-  if (auxiliar == 3){
-    informacoes(ctx);
   }
   if (auxiliar == 2 && level < 11){
     ctx.fillStyle = "black";
@@ -312,7 +268,6 @@ function telas(){
     var texto3 = "Tecle enter para iniciar o level";
     textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
     soundLib.play("Ta-Da");
-    informacoes(ctx);
   }
   if (auxiliar == 4){
     ctx.fillStyle = "black";
@@ -322,7 +277,6 @@ function telas(){
     var texto3 = "Tecle enter para voltar ao jogo";
     textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
     soundLib.play("pc-dying");
-    informacoes(ctx);
   }
   if (auxiliar == 5){
     ctx.fillStyle = "black";
@@ -332,7 +286,6 @@ function telas(){
     var texto3 = "Tecle enter para voltar ao jogo";
     textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
     soundLib.play("alarm");
-    informacoes(ctx);
   }
   if (auxiliar == 6){
     ctx.fillStyle = "black";
@@ -343,7 +296,6 @@ function telas(){
     textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
     soundLib.play("pc-dying");
     soundLib.play("game-over");
-    informacoes(ctx);
   }
   if (auxiliar == 7){
     ctx.fillStyle = "black";
@@ -353,10 +305,8 @@ function telas(){
     var texto3 = "Tecle enter para reiniciar o jogo"
     textoFormatado(texto1 ,texto2, texto3, "", "", "", "", "", "", "");
     soundLib.play("aplause");
-    informacoes(ctx);
   }
 }
-
 function textoFormatado(texto1, texto2, texto3, texto4, texto5, texto6, texto7, texto8, texto9, texto10){
   ctx.textAlign="center";
   ctx.fillStyle = "red";
@@ -375,4 +325,26 @@ function textoFormatado(texto1, texto2, texto3, texto4, texto5, texto6, texto7, 
   ctx.fillText(texto8, tela.width / 2, tela.height / 2 + 100);
   ctx.fillText(texto9, tela.width / 2, tela.height / 2 + 115);
   ctx.fillText(texto10, tela.width / 2, tela.height / 2 + 130);
+}
+function aux(){
+  pc.tempo = pc.tempo - dt;
+  if (auxiliar == 3){
+    tempoRestante = tempoRestante - dt;
+  }
+  if (Math.floor(tempoRestante) < 10){
+    mapa.cronometro = mapa.cronometro - dt;
+    if (mapa.cronometro <= 0){
+      soundLib.play("time");
+      mapa.cronometro = 1.0;
+    }
+  }
+  if (vidas == 0){
+    auxiliar = 6;
+  }
+  if (level == 11){
+    auxiliar = 7;
+  }
+  if (auxiliar == 0 || auxiliar == 1 || auxiliar == 2 || auxiliar == 4 || auxiliar == 5 || auxiliar == 6 || auxiliar == 7){
+    cancelAnimationFrame(id);
+  }
 }

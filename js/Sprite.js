@@ -113,13 +113,13 @@ Sprite.prototype.desenhar = function(ctx) {
 }
 
 Sprite.prototype.desenharPose = function(ctx) {
-  if (pc.pose == 8 && tempo <= 0){
+  if (pc.pose == 8 && pc.tempo <= 0){
     pc.pose = 4;
-  }else if (pc.pose == 9 && tempo <= 0){
+  }else if (pc.pose == 9 && pc.tempo <= 0){
     pc.pose = 6;
-  }else if (pc.pose == 10 && tempo <= 0){
+  }else if (pc.pose == 10 && pc.tempo <= 0){
     pc.pose = 7;
-  }else if (pc.pose == 11 && tempo <= 0){
+  }else if (pc.pose == 11 && pc.tempo <= 0){
     pc.pose = 5;
   }
   ctx.fillStyle = "black";
