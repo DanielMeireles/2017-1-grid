@@ -489,7 +489,7 @@ Map.prototype.repelir = function(primeiro, segundo, distRaio){
     Math.pow(dx,2)+
     Math.pow(dy,2)
   );
-  if(raio>20) return;
+  if(raio>10) return;
   primeiro.ax += 50*dx/(raio*raio);
   primeiro.ay += 50*dy/(raio*raio);
 }
